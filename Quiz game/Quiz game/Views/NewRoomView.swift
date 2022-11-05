@@ -16,6 +16,7 @@ struct NewRoomView: View {
     @State var showDocumentPicker: Bool = false
     @State var showNewQuizView: Bool = false
     @State var quiz: QuizModel? = nil
+    @State var showView: Bool = false
     
     var body: some View {
         NavigationView {
@@ -81,7 +82,7 @@ struct NewRoomView: View {
                     }
                     .foregroundColor(Color.accentColor)
                     .onTapGesture {
-                        
+                        showView = true
                     }
             }
             .navigationTitle("Создать комнату")
@@ -104,6 +105,9 @@ struct NewRoomView: View {
             } else {
                 NewQuizView(quizModel: QuizModel())
             }
+        }
+        .fullScreenCover(isPresented: $showView) {
+            LobbyView(isHost: .constant(true), server: RoomModel(name: "Name", address: "123", playersAmount: "15/20"), showView: $showView)
         }
     }
 }

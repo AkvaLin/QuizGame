@@ -11,6 +11,7 @@ struct MainView: View {
     
     @StateObject var viewModel: ViewModel
     @State var isNewRoomViewShowing: Bool = false
+    @State var showView: Bool = false
     
     var body: some View {
         NavigationView {
@@ -18,7 +19,7 @@ struct MainView: View {
                 if let rooms = viewModel.roomModel {
                     List {
                         ForEach(rooms) { room in
-                            NavigationLink(destination: QuestionView()) {
+                            NavigationLink(destination: LobbyView(isHost: .constant(false), server: room, showView: $showView)) {
                                 HStack {
                                     Circle()
                                         .frame(width: 45, height: 45)

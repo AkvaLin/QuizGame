@@ -10,6 +10,11 @@
 		F688F53928CE6C2F001FA786 /* Quiz_gameApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F688F53828CE6C2F001FA786 /* Quiz_gameApp.swift */; };
 		F688F53D28CE6C31001FA786 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F688F53C28CE6C31001FA786 /* Assets.xcassets */; };
 		F688F54028CE6C31001FA786 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F688F53F28CE6C31001FA786 /* Preview Assets.xcassets */; };
+		F68E73192915516D00B4B1C6 /* PlayerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68E73182915516D00B4B1C6 /* PlayerModel.swift */; };
+		F68E73252915726A00B4B1C6 /* NetworkingTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68E73242915726A00B4B1C6 /* NetworkingTestView.swift */; };
+		F68E73282916DAB700B4B1C6 /* NetworkBrowser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68E73272916DAB700B4B1C6 /* NetworkBrowser.swift */; };
+		F68E732A2916DAC700B4B1C6 /* NetworkConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68E73292916DAC700B4B1C6 /* NetworkConnection.swift */; };
+		F68E732C2916DAD300B4B1C6 /* NetworkServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68E732B2916DAD300B4B1C6 /* NetworkServer.swift */; };
 		F6CB18452913A28F00D619C7 /* QuestionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6CB18442913A28F00D619C7 /* QuestionView.swift */; };
 		F6CB18472913D2D800D619C7 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6CB18462913D2D800D619C7 /* MainView.swift */; };
 		F6CB18492913D2E500D619C7 /* LobbyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6CB18482913D2E500D619C7 /* LobbyView.swift */; };
@@ -29,6 +34,11 @@
 		F688F53828CE6C2F001FA786 /* Quiz_gameApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Quiz_gameApp.swift; sourceTree = "<group>"; };
 		F688F53C28CE6C31001FA786 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F688F53F28CE6C31001FA786 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		F68E73182915516D00B4B1C6 /* PlayerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerModel.swift; sourceTree = "<group>"; };
+		F68E73242915726A00B4B1C6 /* NetworkingTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingTestView.swift; sourceTree = "<group>"; };
+		F68E73272916DAB700B4B1C6 /* NetworkBrowser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkBrowser.swift; sourceTree = "<group>"; };
+		F68E73292916DAC700B4B1C6 /* NetworkConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkConnection.swift; sourceTree = "<group>"; };
+		F68E732B2916DAD300B4B1C6 /* NetworkServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkServer.swift; sourceTree = "<group>"; };
 		F6CB18442913A28F00D619C7 /* QuestionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionView.swift; sourceTree = "<group>"; };
 		F6CB18462913D2D800D619C7 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		F6CB18482913D2E500D619C7 /* LobbyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LobbyView.swift; sourceTree = "<group>"; };
@@ -92,6 +102,17 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		F68E72F929152BB800B4B1C6 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				F68E73242915726A00B4B1C6 /* NetworkingTestView.swift */,
+				F68E73272916DAB700B4B1C6 /* NetworkBrowser.swift */,
+				F68E73292916DAC700B4B1C6 /* NetworkConnection.swift */,
+				F68E732B2916DAD300B4B1C6 /* NetworkServer.swift */,
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
 		F6CB1856291403C300D619C7 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -112,6 +133,7 @@
 				F6CB184C2913D75600D619C7 /* RoomModel.swift */,
 				F6CB18542913F5D200D619C7 /* QuizModel.swift */,
 				F6CB18672914440400D619C7 /* QuestionModel.swift */,
+				F68E73182915516D00B4B1C6 /* PlayerModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -127,6 +149,7 @@
 		F6CB18592914041600D619C7 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				F68E72F929152BB800B4B1C6 /* Networking */,
 				F6CB18522913F1DD00D619C7 /* DocumentPicker.swift */,
 			);
 			path = Services;
@@ -204,15 +227,20 @@
 			files = (
 				F6CB184D2913D75600D619C7 /* RoomModel.swift in Sources */,
 				F6CB18492913D2E500D619C7 /* LobbyView.swift in Sources */,
+				F68E732A2916DAC700B4B1C6 /* NetworkConnection.swift in Sources */,
 				F6CB18472913D2D800D619C7 /* MainView.swift in Sources */,
 				F6CB18682914440400D619C7 /* QuestionModel.swift in Sources */,
 				F6CB18452913A28F00D619C7 /* QuestionView.swift in Sources */,
 				F6CB184B2913D2F100D619C7 /* EndGameView.swift in Sources */,
+				F68E732C2916DAD300B4B1C6 /* NetworkServer.swift in Sources */,
+				F68E73252915726A00B4B1C6 /* NetworkingTestView.swift in Sources */,
+				F68E73192915516D00B4B1C6 /* PlayerModel.swift in Sources */,
 				F6CB184F2913D8DE00D619C7 /* ViewModel.swift in Sources */,
 				F6CB18552913F5D200D619C7 /* QuizModel.swift in Sources */,
 				F6CB18512913E37700D619C7 /* NewRoomView.swift in Sources */,
 				F6CB18532913F1DD00D619C7 /* DocumentPicker.swift in Sources */,
 				F6CB1866291441FA00D619C7 /* NewQuizView.swift in Sources */,
+				F68E73282916DAB700B4B1C6 /* NetworkBrowser.swift in Sources */,
 				F688F53928CE6C2F001FA786 /* Quiz_gameApp.swift in Sources */,
 				F6CB186A291446A600D619C7 /* NewQuestionView.swift in Sources */,
 			);
@@ -346,6 +374,8 @@
 				DEVELOPMENT_TEAM = 5374B32457;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Quiz-game-Info.plist";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "App uses the local network to connect with players arround you";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -376,6 +406,8 @@
 				DEVELOPMENT_TEAM = 5374B32457;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Quiz-game-Info.plist";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "App uses the local network to connect with players arround you";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
