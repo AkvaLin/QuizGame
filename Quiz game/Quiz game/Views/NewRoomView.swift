@@ -47,43 +47,44 @@ struct NewRoomView: View {
                         }
                     }
                     .listStyle(.plain)
-                    .frame(width: 300, height: 300)
                     .padding()
                 }
                 
-                HStack {
+                HStack(spacing: 20) {
                     Button("Создать викторину") {
                         quiz = nil
                         showNewQuizView = true
                     }
                     .buttonStyle(.bordered)
-                    .padding()
-                    .frame(height: 50)
-                    RoundedRectangle(cornerRadius: 15)
-                        .foregroundColor(.gray.opacity(0.2))
-                        .overlay {
-                            Image(systemName: "folder")
-                                .foregroundColor(.accentColor)
-                        }
-                        .frame(width: 50, height: 50)
-                        .onTapGesture {
-                            showDocumentPicker = true
-                        }
+                    
+
+                    Button {
+                        showDocumentPicker = true
+                    } label: {
+                        Image(systemName: "folder")
+                    }
+                    .buttonStyle(.bordered)
+                    
                 }
                 .padding()
                 
-                RoundedRectangle(cornerRadius: 15)
-                    .frame(width: 320, height: 50)
-                    .padding()
-                    .overlay {
-                        Text("Начать игру")
-                        .padding()
-                        .foregroundColor(.white)
+                Button {
+                    showView = true
+                } label: {
+                    VStack {
+                        Spacer()
+                        HStack {
+                            Spacer()
+                            Text("Создать")
+                            Spacer()
+                        }
+                        Spacer()
                     }
-                    .foregroundColor(Color.accentColor)
-                    .onTapGesture {
-                        showView = true
-                    }
+                }
+                .buttonStyle(.borderedProminent)
+                .buttonBorderShape(.roundedRectangle(radius: 15))
+                .frame(width: 320, height: 50)
+                .padding()
             }
             .navigationTitle("Создать комнату")
             .toolbar {
@@ -107,7 +108,18 @@ struct NewRoomView: View {
             }
         }
         .fullScreenCover(isPresented: $showView) {
-            LobbyView(isHost: .constant(true), server: RoomModel(name: "Name", address: "123", playersAmount: "15/20"), showView: $showView)
+            NavigationView {
+                LobbyView(isHost: .constant(true), server: RoomModel(name: "Name", address: "123", playersAmount: 15, maxPlayersAmount: 20), showView: $showView)
+                    .toolbar {
+                        ToolbarItem(placement: .cancellationAction) {
+                            Image(systemName: "chevron.backward")
+                                .onTapGesture {
+                                    showView = false
+                                }
+                                .foregroundColor(Color.accentColor)
+                        }
+                    }
+            }
         }
     }
 }

@@ -12,6 +12,9 @@ struct MainView: View {
     @StateObject var viewModel: ViewModel
     @State var isNewRoomViewShowing: Bool = false
     @State var showView: Bool = false
+    @State var showPersonAlert: Bool = false
+    
+    @State var name: String = "Player"
     
     var body: some View {
         NavigationView {
@@ -37,27 +40,52 @@ struct MainView: View {
                                     }
                                     .padding([.leading, .trailing])
                                     Spacer()
-                                    Text(room.playersAmount)
+                                    Text("\(room.playersAmount)/\(room.maxPlayersAmount)")
                                 }
                             }
                         }
                     }
                 }
-                RoundedRectangle(cornerRadius: 15)
-                    .frame(width: 320, height: 50)
-                    .overlay {
-                        Text("Создать комнату")
-                        .padding()
-                        .foregroundColor(.white)
+
+                Button {
+                    isNewRoomViewShowing = true
+                } label: {
+                    VStack {
+                        Spacer()
+                        HStack {
+                            Spacer()
+                            Text("Создать комнату")
+                            Spacer()
+                        }
+                        Spacer()
                     }
-                    .foregroundColor(Color.accentColor)
-                    .onTapGesture {
-                        isNewRoomViewShowing = true
-                    }
+                }
+                .buttonStyle(.borderedProminent)
+                .buttonBorderShape(.roundedRectangle(radius: 15))
+                .frame(width: 320, height: 50)
+                .padding()
             }
             .navigationTitle("Quiz Game")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        showPersonAlert = true
+                    } label: {
+                        Image(systemName: "person")
+                    }
+                }
+            }
             .fullScreenCover(isPresented: $isNewRoomViewShowing) {
                 NewRoomView(viewModel: viewModel, isNewRoomViewShowing: $isNewRoomViewShowing)
+            }
+            .alert("Введите имя", isPresented: $showPersonAlert) {
+                TextField("Name", text: $name)
+                Button("Сохранить") {
+                    
+                }
+                Button("Отмена", role: .cancel) {
+                    
+                }
             }
         }
     }
@@ -68,10 +96,10 @@ struct MainView_Previews: PreviewProvider {
         MainView(viewModel:
                     ViewModel(roomModel:
                                 [
-                                    RoomModel(name: "Test1", address: "10.10.10.10", playersAmount: "16/20"),
-                                    RoomModel(name: "Test1", address: "10.10.10.10", playersAmount: "16/20"),
-                                    RoomModel(name: "Test1", address: "10.10.10.10", playersAmount: "16/20"),
-                                    RoomModel(name: "Супер Длинное названиеееееееееееееееееееееееееееееее", address: "10.10.10.10", playersAmount: "16/20")
+                                    RoomModel(name: "Test1", address: "10.10.10.10", playersAmount: 14, maxPlayersAmount: 20),
+                                    RoomModel(name: "Test1", address: "10.10.10.10", playersAmount: 15, maxPlayersAmount: 15),
+                                    RoomModel(name: "Test1", address: "10.10.10.10", playersAmount: 16, maxPlayersAmount: 30),
+                                    RoomModel(name: "Супер Длинное названиеееееееееееееееееееееееееееееее", address: "10.10.10.10", playersAmount: 3, maxPlayersAmount: 10)
                                 ]))
     }
 }

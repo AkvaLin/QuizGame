@@ -13,7 +13,8 @@ struct QuestionView: View {
     @State var secondButtonTitle: String = "Button2"
     @State var thirdButtonTitle: String = "Button3"
     @State var fourthButtonTitle: String = "Button4"
-    @State var questionAmountTitle: String = "1/20"
+    @State var questionAmount: Int = 20
+    @State var currentQuestion: Int = 1
     @State var showAlert = false
     @Binding var showView: Bool
     @Binding var showQuestionView: Bool
@@ -31,40 +32,114 @@ struct QuestionView: View {
                 ZStack {
                     RoundedRectangle(cornerRadius: 25)
                         .foregroundColor(.gray.opacity(0.25))
+                        .overlay {
+                            GeometryReader { geo in
+                                RoundedRectangle(cornerRadius: 25)
+                                .fill(
+                                    LinearGradient(
+                                        colors: [Color.blueBright.opacity(0.6), Color.blueDark.opacity(0.6)],
+                                        startPoint: .leading,
+                                        endPoint: .trailing
+                                    )
+                                )
+                                .frame(width: geo.size.width * CGFloat(Float(currentQuestion) / Float(questionAmount)))
+                            }
+                        }
                         .frame(height: 25)
-                    Text(questionAmountTitle)
+                    Text("\(currentQuestion)/\(questionAmount)")
                 }
                 .padding(.top, 1.0)
                 .padding([.leading, .trailing, .bottom])
                 
-                HStack(spacing: 40) {
-                    VStack {
-                        Button(firstButtonTitle) {
-                            
+                HStack(spacing: 20) {
+                    VStack(spacing: 20) {
+                        Button {
+                            withAnimation(.easeInOut) {
+                                if questionAmount > currentQuestion {
+                                    currentQuestion += 1
+                                }
+                            }
+                        } label: {
+                            VStack {
+                                Spacer()
+                                HStack {
+                                    Spacer()
+                                    Text(firstButtonTitle)
+                                    Spacer()
+                                }
+                                Spacer()
+                            }
                         }
                         .buttonStyle(.borderedProminent)
-                        .padding()
+                        .buttonBorderShape(.roundedRectangle(radius: 15))
                         
-                        Button(thirdButtonTitle) {
-                            
+                        
+                        Button {
+                            withAnimation(.easeInOut) {
+                                if questionAmount > currentQuestion {
+                                    currentQuestion += 1
+                                }
+                            }
+                        } label: {
+                            VStack {
+                                Spacer()
+                                HStack {
+                                    Spacer()
+                                    Text(firstButtonTitle)
+                                    Spacer()
+                                }
+                                Spacer()
+                            }
                         }
                         .buttonStyle(.borderedProminent)
-                        .padding()
+                        .buttonBorderShape(.roundedRectangle(radius: 15))
+                        
                     }
-                    VStack {
-                        Button(secondButtonTitle) {
-                            
+                    VStack(spacing: 20) {
+                        Button {
+                            withAnimation(.easeInOut) {
+                                if questionAmount > currentQuestion {
+                                    currentQuestion += 1
+                                }
+                            }
+                        } label: {
+                            VStack {
+                                Spacer()
+                                HStack {
+                                    Spacer()
+                                    Text(secondButtonTitle)
+                                    Spacer()
+                                }
+                                Spacer()
+                            }
                         }
                         .buttonStyle(.borderedProminent)
-                        .padding()
+                        .buttonBorderShape(.roundedRectangle(radius: 15))
                         
-                        Button(fourthButtonTitle) {
-                            
+                        
+                        Button {
+                            withAnimation(.easeInOut) {
+                                if questionAmount > currentQuestion {
+                                    currentQuestion += 1
+                                }
+                            }
+                        } label: {
+                            VStack {
+                                Spacer()
+                                HStack {
+                                    Spacer()
+                                    Text(fourthButtonTitle)
+                                    Spacer()
+                                }
+                                Spacer()
+                            }
                         }
                         .buttonStyle(.borderedProminent)
-                        .padding()
+                        .buttonBorderShape(.roundedRectangle(radius: 15))
+                        
                     }
                 }
+                .padding()
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {

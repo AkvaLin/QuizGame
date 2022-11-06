@@ -96,6 +96,7 @@ struct NewQuestionView: View {
                 }
             }
             .buttonStyle(.borderedProminent)
+            .padding()
         }
         .alert("Заполните все поля", isPresented: $showAlert) {
             Button("Ок", role: .cancel) { }

@@ -43,23 +43,29 @@ struct LobbyView: View {
             }
             
             if isHost {
-                RoundedRectangle(cornerRadius: 15)
-                    .frame(width: 320, height: 50)
-                    .overlay {
-                        Text("Начать игру")
-                            .padding()
-                            .foregroundColor(.white)
+                Button {
+                    showQuestionView = true
+                } label: {
+                    VStack {
+                        Spacer()
+                        HStack {
+                            Spacer()
+                            Text("Начать игру")
+                            Spacer()
+                        }
+                        Spacer()
                     }
-                    .foregroundColor(Color.accentColor)
-                    .onTapGesture {
-                        showQuestionView = true
-                    }
+                }
+                .buttonStyle(.borderedProminent)
+                .buttonBorderShape(.roundedRectangle(radius: 15))
+                .frame(width: 320, height: 50)
+                .padding()
             }
         }
         .navigationTitle(server.name)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Text(server.playersAmount)
+                Text("\(server.playersAmount)/\(server.maxPlayersAmount)")
             }
         }
         .fullScreenCover(isPresented: $showQuestionView) {
@@ -71,6 +77,6 @@ struct LobbyView: View {
 
 struct LobbyView_Previews: PreviewProvider {
     static var previews: some View {
-        LobbyView(isHost: .constant(true), server: .init(name: "Server", address: "12", playersAmount: "16/20"), showView: .constant(false))
+        LobbyView(isHost: .constant(true), server: .init(name: "Server", address: "12", playersAmount: 16, maxPlayersAmount: 20), showView: .constant(false))
     }
 }

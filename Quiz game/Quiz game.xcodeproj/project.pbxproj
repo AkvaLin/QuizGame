@@ -15,6 +15,7 @@
 		F68E73282916DAB700B4B1C6 /* NetworkBrowser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68E73272916DAB700B4B1C6 /* NetworkBrowser.swift */; };
 		F68E732A2916DAC700B4B1C6 /* NetworkConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68E73292916DAC700B4B1C6 /* NetworkConnection.swift */; };
 		F68E732C2916DAD300B4B1C6 /* NetworkServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68E732B2916DAD300B4B1C6 /* NetworkServer.swift */; };
+		F68E73322916F43900B4B1C6 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68E73312916F43900B4B1C6 /* Extensions.swift */; };
 		F6CB18452913A28F00D619C7 /* QuestionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6CB18442913A28F00D619C7 /* QuestionView.swift */; };
 		F6CB18472913D2D800D619C7 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6CB18462913D2D800D619C7 /* MainView.swift */; };
 		F6CB18492913D2E500D619C7 /* LobbyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6CB18482913D2E500D619C7 /* LobbyView.swift */; };
@@ -39,6 +40,7 @@
 		F68E73272916DAB700B4B1C6 /* NetworkBrowser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkBrowser.swift; sourceTree = "<group>"; };
 		F68E73292916DAC700B4B1C6 /* NetworkConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkConnection.swift; sourceTree = "<group>"; };
 		F68E732B2916DAD300B4B1C6 /* NetworkServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkServer.swift; sourceTree = "<group>"; };
+		F68E73312916F43900B4B1C6 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		F6CB18442913A28F00D619C7 /* QuestionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionView.swift; sourceTree = "<group>"; };
 		F6CB18462913D2D800D619C7 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		F6CB18482913D2E500D619C7 /* LobbyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LobbyView.swift; sourceTree = "<group>"; };
@@ -151,6 +153,7 @@
 			children = (
 				F68E72F929152BB800B4B1C6 /* Networking */,
 				F6CB18522913F1DD00D619C7 /* DocumentPicker.swift */,
+				F68E73312916F43900B4B1C6 /* Extensions.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -239,6 +242,7 @@
 				F6CB18552913F5D200D619C7 /* QuizModel.swift in Sources */,
 				F6CB18512913E37700D619C7 /* NewRoomView.swift in Sources */,
 				F6CB18532913F1DD00D619C7 /* DocumentPicker.swift in Sources */,
+				F68E73322916F43900B4B1C6 /* Extensions.swift in Sources */,
 				F6CB1866291441FA00D619C7 /* NewQuizView.swift in Sources */,
 				F68E73282916DAB700B4B1C6 /* NetworkBrowser.swift in Sources */,
 				F688F53928CE6C2F001FA786 /* Quiz_gameApp.swift in Sources */,
