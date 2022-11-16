@@ -23,6 +23,7 @@ class NetworkServer: NetworkConnectionDelegate
     private var serverQueue: DispatchQueue?
     
     private var connectionsByID: [Int: NetworkConnection] = [:]
+    private var namesByID: [Int: String] = [:]
     
     init(name: String?)
     {
@@ -68,8 +69,12 @@ class NetworkServer: NetworkConnectionDelegate
         
         print("Server accepted connection \(connection)")
     }
+    
+    func addNewName(id: Int, name: String) {
+        self.namesByID[id] = name
+    }
 
-    private func stop()
+    func stop()
     {
         self.listener.stateUpdateHandler = nil
         self.listener.newConnectionHandler = nil
@@ -136,6 +141,7 @@ class NetworkServer: NetworkConnectionDelegate
     func connectionClosed(connection: NetworkConnection)
     {
         self.connectionsByID.removeValue(forKey: connection.id)
+        self.namesByID.removeValue(forKey: connection.id)
         print("Server connection closed (\(connection))")
     }
     

@@ -10,7 +10,7 @@ import SwiftUI
 struct LobbyView: View {
     
     @Binding var isHost: Bool
-    @ObservedObject var server: RoomModel
+    @ObservedObject var viewModel: ViewModel
     @Binding var showView: Bool
     @State var showQuestionView: Bool = false
     
@@ -62,21 +62,14 @@ struct LobbyView: View {
                 .padding()
             }
         }
-        .navigationTitle(server.name)
+        .navigationTitle(viewModel.currentRoom?.name ?? "")
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Text("\(server.playersAmount)/\(server.maxPlayersAmount)")
+                Text("\(viewModel.currentRoom?.playersAmount ?? 0)/\(viewModel.currentRoom?.maxPlayersAmount ?? 0)")
             }
         }
         .fullScreenCover(isPresented: $showQuestionView) {
             QuestionView(showView: $showView, showQuestionView: $showQuestionView)
         }
-    }
-    
-}
-
-struct LobbyView_Previews: PreviewProvider {
-    static var previews: some View {
-        LobbyView(isHost: .constant(true), server: .init(name: "Server", address: "12", playersAmount: 16, maxPlayersAmount: 20), showView: .constant(false))
     }
 }

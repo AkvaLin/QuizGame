@@ -6,19 +6,19 @@
 //
 
 import SwiftUI
+import Network
 
 class RoomModel: Identifiable, ObservableObject {
     var id = UUID()
     @Published var name: String
-    @Published var address: String
-    @Published var playersAmount: Int
+    @Published var playersAmount: Int = 1
     @Published var maxPlayersAmount: Int
+    var endPoint: NWEndpoint?
     
-    init(id: UUID = UUID(), name: String, address: String, playersAmount: Int, maxPlayersAmount: Int) {
+    init(id: UUID = UUID(), name: String, maxPlayersAmount: Int, endPoint: NWEndpoint?) {
         self.id = id
         self.name = name
-        self.address = address
-        self.playersAmount = playersAmount
         self.maxPlayersAmount = maxPlayersAmount
+        self.endPoint = endPoint
     }
 }

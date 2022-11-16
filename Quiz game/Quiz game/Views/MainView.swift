@@ -14,7 +14,7 @@ struct MainView: View {
     @State var showView: Bool = false
     @State var showPersonAlert: Bool = false
     
-    @State var name: String = "Player"
+    @State var name: String = UserDefaults.standard.string(forKey: "playerName") ?? "Player"
     
     var body: some View {
         NavigationView {
@@ -22,7 +22,11 @@ struct MainView: View {
                 if let rooms = viewModel.roomModel {
                     List {
                         ForEach(rooms) { room in
-                            NavigationLink(destination: LobbyView(isHost: .constant(false), server: room, showView: $showView)) {
+                            NavigationLink(destination: LobbyView(isHost: .constant(false), viewModel: viewModel, showView: $showView).onAppear {
+                                guard let endPoint = room.endPoint else { return }
+                                viewModel.startConnection(endPoint: endPoint)
+                                viewModel.currentRoom = room
+                            }) {
                                 HStack {
                                     Circle()
                                         .frame(width: 45, height: 45)
@@ -35,8 +39,6 @@ struct MainView: View {
                                         Text(room.name)
                                             .font(Font.system(size: 17))
                                             .lineLimit(2)
-                                        Text(room.address)
-                                            .font(Font.system(size: 12))
                                     }
                                     .padding([.leading, .trailing])
                                     Spacer()
@@ -81,12 +83,18 @@ struct MainView: View {
             .alert("Введите имя", isPresented: $showPersonAlert) {
                 TextField("Name", text: $name)
                 Button("Сохранить") {
-                    
+                    UserDefaults.standard.set(name, forKey: "playerName")
                 }
                 Button("Отмена", role: .cancel) {
-                    
+                    name = UserDefaults.standard.string(forKey: "playerName") ?? "Player"
                 }
             }
+        }
+        .onAppear {
+            viewModel.startBrowsing()
+        }
+        .onDisappear {
+            viewModel.cancelBrowsing()
         }
     }
 }
@@ -94,12 +102,6 @@ struct MainView: View {
 struct MainView_Previews: PreviewProvider {
     static var previews: some View {
         MainView(viewModel:
-                    ViewModel(roomModel:
-                                [
-                                    RoomModel(name: "Test1", address: "10.10.10.10", playersAmount: 14, maxPlayersAmount: 20),
-                                    RoomModel(name: "Test1", address: "10.10.10.10", playersAmount: 15, maxPlayersAmount: 15),
-                                    RoomModel(name: "Test1", address: "10.10.10.10", playersAmount: 16, maxPlayersAmount: 30),
-                                    RoomModel(name: "Супер Длинное названиеееееееееееееееееееееееееееееее", address: "10.10.10.10", playersAmount: 3, maxPlayersAmount: 10)
-                                ]))
+                    ViewModel())
     }
 }

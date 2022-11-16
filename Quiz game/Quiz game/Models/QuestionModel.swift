@@ -8,16 +8,14 @@
 import Foundation
 
 class QuestionModel: Identifiable, ObservableObject {
-    var id = UUID()
     @Published var question: String
     @Published var firstAnswer: String
     @Published var secondAnswer: String
     @Published var thirdAnswer: String
     @Published var fourthAnswer: String
     @Published var answer: String
-
-    init(id: UUID = UUID(), question: String = "", firstAnswer: String = "", secondAnswer: String = "", thridAnswer: String = "", fourthAnswer: String = "", answer: String = "") {
-        self.id = id
+    
+    init(question: String = "", firstAnswer: String = "", secondAnswer: String = "", thridAnswer: String = "", fourthAnswer: String = "", answer: String = "") {
         self.question = question
         self.firstAnswer = firstAnswer
         self.secondAnswer = secondAnswer

@@ -18,6 +18,8 @@ struct NewRoomView: View {
     @State var quiz: QuizModel? = nil
     @State var showView: Bool = false
     
+    private let server: NetworkServer? = nil
+    
     var body: some View {
         NavigationView {
             VStack {
@@ -70,6 +72,7 @@ struct NewRoomView: View {
                 
                 Button {
                     showView = true
+                    viewModel.startServer(name: name)
                 } label: {
                     VStack {
                         Spacer()
@@ -109,12 +112,13 @@ struct NewRoomView: View {
         }
         .fullScreenCover(isPresented: $showView) {
             NavigationView {
-                LobbyView(isHost: .constant(true), server: RoomModel(name: "Name", address: "123", playersAmount: 15, maxPlayersAmount: 20), showView: $showView)
+                LobbyView(isHost: .constant(true), viewModel: viewModel, showView: $showView)
                     .toolbar {
                         ToolbarItem(placement: .cancellationAction) {
                             Image(systemName: "chevron.backward")
                                 .onTapGesture {
                                     showView = false
+                                    viewModel.stopServer()
                                 }
                                 .foregroundColor(Color.accentColor)
                         }
