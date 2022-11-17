@@ -11,23 +11,14 @@ struct LobbyView: View {
     
     @Binding var isHost: Bool
     @ObservedObject var viewModel: ViewModel
+    @ObservedObject var roomModel: RoomModel
     @Binding var showView: Bool
-    @State var showQuestionView: Bool = false
-    
-    var models = [
-        PlayerModel(name: "Name"),
-        PlayerModel(name: "Name"),
-        PlayerModel(name: "Name"),
-        PlayerModel(name: "Name"),
-        PlayerModel(name: "Name"),
-        PlayerModel(name: "Name"),
-    ]
     
     var body: some View {
         
         VStack {
             List {
-                ForEach(models) { model in
+                ForEach(roomModel.players, id: \.self) { name in
                     HStack {
                         Circle()
                             .frame(width: 40, height: 40)
@@ -37,14 +28,14 @@ struct LobbyView: View {
                                     .padding()
                             }
                             .padding([.trailing])
-                        Text(model.name)
+                        Text(name)
                     }
                 }
             }
             
             if isHost {
                 Button {
-                    showQuestionView = true
+                    viewModel.showQuestionView = true
                 } label: {
                     VStack {
                         Spacer()
@@ -62,14 +53,14 @@ struct LobbyView: View {
                 .padding()
             }
         }
-        .navigationTitle(viewModel.currentRoom?.name ?? "")
+        .navigationTitle(roomModel.name)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Text("\(viewModel.currentRoom?.playersAmount ?? 0)/\(viewModel.currentRoom?.maxPlayersAmount ?? 0)")
+                Text("\(roomModel.playersAmount)/\(roomModel.maxPlayersAmount)")
             }
         }
-        .fullScreenCover(isPresented: $showQuestionView) {
-            QuestionView(showView: $showView, showQuestionView: $showQuestionView)
+        .fullScreenCover(isPresented: $viewModel.showQuestionView) {
+            QuestionView(showView: $showView, showQuestionView: $viewModel.showQuestionView)
         }
     }
 }

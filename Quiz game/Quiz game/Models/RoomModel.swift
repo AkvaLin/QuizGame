@@ -13,6 +13,7 @@ class RoomModel: Identifiable, ObservableObject {
     @Published var name: String
     @Published var playersAmount: Int = 1
     @Published var maxPlayersAmount: Int
+    @Published var players: [String] = [String]()
     var endPoint: NWEndpoint?
     
     init(id: UUID = UUID(), name: String, maxPlayersAmount: Int, endPoint: NWEndpoint?) {

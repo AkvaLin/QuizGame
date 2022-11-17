@@ -13,6 +13,7 @@ protocol NetworkServerDelegate: AnyObject
     func serverBecameReady()
     func connectionOpened(id: Int)
     func connectionReceivedData(id: Int, data: Data)
+    func connectionClosedUIUpdate(data: Data)
 }
 
 class NetworkServer: NetworkConnectionDelegate
@@ -129,6 +130,17 @@ class NetworkServer: NetworkConnectionDelegate
         }
     }
     
+    func sendToAllPlayersData(completion: @escaping (Data) -> Void ) {
+        guard let data = try? JSONEncoder().encode(PlayersMessage(playersAmount: "\(namesByID.count)",
+                                                       maxPlayersAmount: "20",
+                                                       playersName: namesByID.values.sorted())
+        ) else { return }
+        
+        sendToAll(data: data)
+        
+        completion(data)
+    }
+    
     var port: NWEndpoint.Port?
     {
         get {
@@ -147,6 +159,16 @@ class NetworkServer: NetworkConnectionDelegate
     {
         self.connectionsByID.removeValue(forKey: connection.id)
         self.namesByID.removeValue(forKey: connection.id)
+        self.answersByID.removeValue(forKey: connection.id)
+        self.sendToAllPlayersData() { _ in }
+        
+        guard let data = try? JSONEncoder().encode(PlayersMessage(playersAmount: "\(namesByID.count)",
+                                                       maxPlayersAmount: "20",
+                                                       playersName: namesByID.values.sorted())
+        ) else { return }
+        
+        self.delegate?.connectionClosedUIUpdate(data: data)
+        
         print("Server connection closed (\(connection))")
     }
     

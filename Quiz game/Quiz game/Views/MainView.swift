@@ -22,7 +22,10 @@ struct MainView: View {
                 if let rooms = viewModel.roomModel {
                     List {
                         ForEach(rooms) { room in
-                            NavigationLink(destination: LobbyView(isHost: .constant(false), viewModel: viewModel, showView: $showView).onAppear {
+                            NavigationLink(destination: LobbyView(isHost: .constant(false),
+                                                                  viewModel: viewModel,
+                                                                  roomModel: room,
+                                                                  showView: $showView).onAppear {
                                 guard let endPoint = room.endPoint else { return }
                                 viewModel.startConnection(endPoint: endPoint)
                                 viewModel.currentRoom = room

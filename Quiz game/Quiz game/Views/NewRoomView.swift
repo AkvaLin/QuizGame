@@ -72,6 +72,8 @@ struct NewRoomView: View {
                 
                 Button {
                     showView = true
+                    let model = RoomModel(name: name, maxPlayersAmount: 0, endPoint: nil)
+                    viewModel.currentRoom = model
                     viewModel.startServer(name: name)
                 } label: {
                     VStack {
@@ -112,7 +114,11 @@ struct NewRoomView: View {
         }
         .fullScreenCover(isPresented: $showView) {
             NavigationView {
-                LobbyView(isHost: .constant(true), viewModel: viewModel, showView: $showView)
+                LobbyView(isHost: .constant(true),
+                          viewModel: viewModel,
+                          roomModel: viewModel.currentRoom!,
+                          showView: $showView
+                )
                     .toolbar {
                         ToolbarItem(placement: .cancellationAction) {
                             Image(systemName: "chevron.backward")

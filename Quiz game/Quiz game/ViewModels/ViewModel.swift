@@ -13,10 +13,15 @@ class ViewModel: ObservableObject {
     @Published var roomModel = [RoomModel]()
     @Published var quizModel = [QuizModel]()
     @Published var currentRoom: RoomModel? = nil
+    @Published var showQuestionView: Bool = false
+    @Published var showResultsView: Bool = false
     
     private var browser = NetworkBrowser()
     private var server: NetworkServer?
     private var connection: NetworkConnection?
+    
+    private var id: UUID?
+    private var questions: QuizModel?
     
     init(quizModel: [QuizModel] = [QuizModel]()) {
         self.quizModel = quizModel
@@ -37,6 +42,8 @@ class ViewModel: ObservableObject {
         server = NetworkServer(name: name)
         server?.delegate = self
         try? server?.start(queue: DispatchQueue(label: "Server Queue"))
+        id = UUID()
+        server?.addNewName(id: id?.hashValue ?? -1, name: UserDefaults.standard.string(forKey: "playerName") ?? "Host")
     }
     
     func stopServer() {
@@ -52,8 +59,19 @@ class ViewModel: ObservableObject {
         connection?.send(data: data)
     }
     
-    func updateData() {
-
+    func startGame(time: Double) {
+        questions?.questionsModel.forEach { question in
+            DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + time, execute: {
+                let model = QuestionMessage(question: question.question,
+                                           firstAnswer: question.firstAnswer,
+                                           secondAnswer: question.secondAnswer,
+                                           thirdAnswer: question.thirdAnswer,
+                                           fourthAnswer: question.fourthAnswer,
+                                           answer: question.answer)
+                guard let data = try? JSONEncoder().encode(model) else { return }
+                self.server?.sendToAll(data: data)
+            })
+        }
     }
 }
 
@@ -70,11 +88,18 @@ extension ViewModel: NetworkConnectionDelegate {
         guard let messageType = try? JSONDecoder().decode(MessageType.self, from: data) else { return }
         switch messageType.messageType {
         case "players":
-            break
+            guard let message = try? JSONDecoder().decode(PlayersMessage.self, from: data) else { return }
+            DispatchQueue.main.async {
+                self.currentRoom?.playersAmount = Int(message.playersAmount) ?? 0
+                self.currentRoom?.maxPlayersAmount = Int(message.maxPlayersAmount) ?? 0
+                self.currentRoom?.players = message.playersName
+            }
         case "question":
-            break
+            guard let message = try? JSONDecoder().decode(QuestionMessage.self, from: data) else { return }
+            showQuestionView = true
         case "results":
-            break
+            guard let message = try? JSONDecoder().decode(ResultsMessage.self, from: data) else { return }
+            showResultsView = true
         default:
             break
         }
@@ -93,11 +118,28 @@ extension ViewModel: NetworkServerDelegate {
         case "hello":
             guard let message = try? JSONDecoder().decode(HelloMessage.self, from: data) else { return }
             server?.addNewName(id: id, name: message.name)
+            server?.sendToAllPlayersData() { playersData in
+                guard let players = try? JSONDecoder().decode(PlayersMessage.self, from: playersData) else { return }
+                DispatchQueue.main.async {
+                    self.currentRoom?.playersAmount = Int(players.playersAmount) ?? 0
+                    self.currentRoom?.maxPlayersAmount = Int(players.maxPlayersAmount) ?? 0
+                    self.currentRoom?.players = players.playersName
+                }
+            }
         case "answer":
             guard let message = try? JSONDecoder().decode(AnswerMessage.self, from: data) else { return }
             server?.addNewAnswer(id: id, answer: message.answer)
         default:
             break
+        }
+    }
+    
+    func connectionClosedUIUpdate(data: Data) {
+        guard let players = try? JSONDecoder().decode(PlayersMessage.self, from: data) else { return }
+        DispatchQueue.main.async {
+            self.currentRoom?.playersAmount = Int(players.playersAmount) ?? 0
+            self.currentRoom?.maxPlayersAmount = Int(players.maxPlayersAmount) ?? 0
+            self.currentRoom?.players = players.playersName
         }
     }
 }
