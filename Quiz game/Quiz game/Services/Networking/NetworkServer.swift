@@ -24,6 +24,7 @@ class NetworkServer: NetworkConnectionDelegate
     
     private var connectionsByID: [Int: NetworkConnection] = [:]
     private var namesByID: [Int: String] = [:]
+    private var answersByID: [Int: [Bool]] = [:]
     
     init(name: String?)
     {
@@ -72,6 +73,10 @@ class NetworkServer: NetworkConnectionDelegate
     
     func addNewName(id: Int, name: String) {
         self.namesByID[id] = name
+    }
+    
+    func addNewAnswer(id: Int, answer: Bool) {
+        self.answersByID[id]?.append(answer)
     }
 
     func stop()

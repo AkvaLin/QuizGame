@@ -67,7 +67,17 @@ extension ViewModel: NetworkConnectionDelegate {
     func connectionError(connection: NetworkConnection, error: Error) {}
     
     func connectionReceivedData(connection: NetworkConnection, data: Data) {
-        currentRoom?.playersAmount = Int(String(data: data, encoding: .utf8) ?? "0")!
+        guard let messageType = try? JSONDecoder().decode(MessageType.self, from: data) else { return }
+        switch messageType.messageType {
+        case "players":
+            break
+        case "question":
+            break
+        case "results":
+            break
+        default:
+            break
+        }
     }
 }
 
@@ -83,6 +93,9 @@ extension ViewModel: NetworkServerDelegate {
         case "hello":
             guard let message = try? JSONDecoder().decode(HelloMessage.self, from: data) else { return }
             server?.addNewName(id: id, name: message.name)
+        case "answer":
+            guard let message = try? JSONDecoder().decode(AnswerMessage.self, from: data) else { return }
+            server?.addNewAnswer(id: id, answer: message.answer)
         default:
             break
         }

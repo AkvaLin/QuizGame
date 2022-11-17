@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct QuestionModelCodable: Codable {
+struct QuestionMessage: Codable {
     
     var messageType: String = "question"
     
