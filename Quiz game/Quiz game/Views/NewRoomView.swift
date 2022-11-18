@@ -17,8 +17,10 @@ struct NewRoomView: View {
     @State var showNewQuizView: Bool = false
     @State var quiz: QuizModel? = nil
     @State var showView: Bool = false
+    @State var playersAmount: Int = 2
     
     private let server: NetworkServer? = nil
+    private let playersAmountArr = Array(2...20)
     
     var body: some View {
         NavigationView {
@@ -29,6 +31,16 @@ struct NewRoomView: View {
                 TextField("Название", text: $name)
                     .textFieldStyle(.roundedBorder)
                 .padding()
+                
+                HStack {
+                    Text("Максимальное количество игроков")
+                    
+                    Picker("Количество мест", selection: $playersAmount) {
+                        ForEach(playersAmountArr, id: \.self) { amount in
+                            Text("\(amount)")
+                        }
+                    }
+                }
                 
                 if let quizs = viewModel.quizModel,
                     quizs.count > 0 {
@@ -72,7 +84,7 @@ struct NewRoomView: View {
                 
                 Button {
                     showView = true
-                    let model = RoomModel(name: name, maxPlayersAmount: 0, endPoint: nil)
+                    let model = RoomModel(name: name, maxPlayersAmount: playersAmount, endPoint: nil)
                     viewModel.currentRoom = model
                     viewModel.startServer(name: name)
                 } label: {
@@ -117,7 +129,7 @@ struct NewRoomView: View {
                 LobbyView(isHost: .constant(true),
                           viewModel: viewModel,
                           roomModel: viewModel.currentRoom!,
-                          showView: $showView
+                          showView: $showView, isAlertPresented: .constant(false)
                 )
                     .toolbar {
                         ToolbarItem(placement: .cancellationAction) {

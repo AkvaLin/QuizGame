@@ -25,7 +25,7 @@ struct MainView: View {
                             NavigationLink(destination: LobbyView(isHost: .constant(false),
                                                                   viewModel: viewModel,
                                                                   roomModel: room,
-                                                                  showView: $showView).onAppear {
+                                                                  showView: $showView, isAlertPresented: $viewModel.alertError).onAppear {
                                 guard let endPoint = room.endPoint else { return }
                                 viewModel.startConnection(endPoint: endPoint)
                                 viewModel.currentRoom = room

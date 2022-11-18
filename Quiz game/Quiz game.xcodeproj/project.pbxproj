@@ -13,6 +13,7 @@
 		F65F57E429260C0400B8558C /* AnswerMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F65F57E329260C0400B8558C /* AnswerMessage.swift */; };
 		F65F57E629260E8D00B8558C /* PlayersMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F65F57E529260E8D00B8558C /* PlayersMessage.swift */; };
 		F65F57E82926107F00B8558C /* ResultsMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F65F57E72926107F00B8558C /* ResultsMessage.swift */; };
+		F65F58502927C3BD00B8558C /* AccessDeniedMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F65F584F2927C3BD00B8558C /* AccessDeniedMessage.swift */; };
 		F688F53928CE6C2F001FA786 /* Quiz_gameApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F688F53828CE6C2F001FA786 /* Quiz_gameApp.swift */; };
 		F688F53D28CE6C31001FA786 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F688F53C28CE6C31001FA786 /* Assets.xcassets */; };
 		F688F54028CE6C31001FA786 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F688F53F28CE6C31001FA786 /* Preview Assets.xcassets */; };
@@ -42,6 +43,7 @@
 		F65F57E329260C0400B8558C /* AnswerMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerMessage.swift; sourceTree = "<group>"; };
 		F65F57E529260E8D00B8558C /* PlayersMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayersMessage.swift; sourceTree = "<group>"; };
 		F65F57E72926107F00B8558C /* ResultsMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsMessage.swift; sourceTree = "<group>"; };
+		F65F584F2927C3BD00B8558C /* AccessDeniedMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessDeniedMessage.swift; sourceTree = "<group>"; };
 		F688F53528CE6C2F001FA786 /* Quiz game.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Quiz game.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F688F53828CE6C2F001FA786 /* Quiz_gameApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Quiz_gameApp.swift; sourceTree = "<group>"; };
 		F688F53C28CE6C31001FA786 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -85,6 +87,7 @@
 				F65F57E329260C0400B8558C /* AnswerMessage.swift */,
 				F65F57DF2925519300B8558C /* HelloMessage.swift */,
 				F65F57E1292551E800B8558C /* MessageType.swift */,
+				F65F584F2927C3BD00B8558C /* AccessDeniedMessage.swift */,
 			);
 			path = JSON;
 			sourceTree = "<group>";
@@ -252,6 +255,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F65F57E2292551E800B8558C /* MessageType.swift in Sources */,
+				F65F58502927C3BD00B8558C /* AccessDeniedMessage.swift in Sources */,
 				F6CB184D2913D75600D619C7 /* RoomModel.swift in Sources */,
 				F6CB18492913D2E500D619C7 /* LobbyView.swift in Sources */,
 				F68E732A2916DAC700B4B1C6 /* NetworkConnection.swift in Sources */,
@@ -413,7 +417,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -445,7 +449,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

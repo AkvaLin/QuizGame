@@ -13,6 +13,8 @@ struct LobbyView: View {
     @ObservedObject var viewModel: ViewModel
     @ObservedObject var roomModel: RoomModel
     @Binding var showView: Bool
+    @Binding var isAlertPresented: Bool
+    @Environment(\.dismiss) var dismiss
     
     var body: some View {
         
@@ -61,6 +63,12 @@ struct LobbyView: View {
         }
         .fullScreenCover(isPresented: $viewModel.showQuestionView) {
             QuestionView(showView: $showView, showQuestionView: $viewModel.showQuestionView)
+        }
+        .alert("Нет свободных мест", isPresented: $isAlertPresented) {
+            Button("Ok", role: .cancel) {
+                dismiss()
+                viewModel.cancelConnection()
+            }
         }
     }
 }

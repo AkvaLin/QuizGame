@@ -15,6 +15,7 @@ class ViewModel: ObservableObject {
     @Published var currentRoom: RoomModel? = nil
     @Published var showQuestionView: Bool = false
     @Published var showResultsView: Bool = false
+    @Published var alertError: Bool = false
     
     private var browser = NetworkBrowser()
     private var server: NetworkServer?
@@ -39,7 +40,7 @@ class ViewModel: ObservableObject {
     }
     
     func startServer(name: String) {
-        server = NetworkServer(name: name)
+        server = NetworkServer(name: name, maxConnectionsAmount: currentRoom?.maxPlayersAmount ?? 0)
         server?.delegate = self
         try? server?.start(queue: DispatchQueue(label: "Server Queue"))
         id = UUID()
@@ -57,6 +58,11 @@ class ViewModel: ObservableObject {
         connection?.start(queue: DispatchQueue(label: "Client Queue"))
         guard let data = try? JSONEncoder().encode(HelloMessage(name: UserDefaults.standard.string(forKey: "playerName") ?? "Player")) else { return }
         connection?.send(data: data)
+    }
+    
+    func cancelConnection() {
+        connection?.close()
+        connection = nil
     }
     
     func startGame(time: Double) {
@@ -85,6 +91,7 @@ extension ViewModel: NetworkConnectionDelegate {
     func connectionError(connection: NetworkConnection, error: Error) {}
     
     func connectionReceivedData(connection: NetworkConnection, data: Data) {
+
         guard let messageType = try? JSONDecoder().decode(MessageType.self, from: data) else { return }
         switch messageType.messageType {
         case "players":
@@ -100,6 +107,10 @@ extension ViewModel: NetworkConnectionDelegate {
         case "results":
             guard let message = try? JSONDecoder().decode(ResultsMessage.self, from: data) else { return }
             showResultsView = true
+        case "accessDenied":
+            DispatchQueue.main.async {
+                self.alertError = true
+            }
         default:
             break
         }

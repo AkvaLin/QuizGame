@@ -21,16 +21,19 @@ class NetworkServer: NetworkConnectionDelegate
     weak var delegate: NetworkServerDelegate?
     let listener: NWListener
     
+    private var maxConnectionsAmount: Int
+    
     private var serverQueue: DispatchQueue?
     
     private var connectionsByID: [Int: NetworkConnection] = [:]
     private var namesByID: [Int: String] = [:]
     private var answersByID: [Int: [Bool]] = [:]
     
-    init(name: String?)
+    init(name: String?, maxConnectionsAmount: Int)
     {
         self.listener = try! NWListener(using: .tcp)
         self.listener.service = NWListener.Service(name: name, type: "_quiz._tcp")
+        self.maxConnectionsAmount = maxConnectionsAmount
     }
     
     func start(queue: DispatchQueue) throws
@@ -64,16 +67,27 @@ class NetworkServer: NetworkConnectionDelegate
 
     private func onNewConnectionAccepted(nwConnection: NWConnection)
     {
-        let connection = NetworkConnection(nwConnection: nwConnection)
-        self.connectionsByID[connection.id] = connection
-        connection.delegate = self
-        connection.start(queue: self.serverQueue!)
-        
-        print("Server accepted connection \(connection)")
+        if namesByID.count < maxConnectionsAmount {
+            let connection = NetworkConnection(nwConnection: nwConnection)
+            self.connectionsByID[connection.id] = connection
+            connection.delegate = self
+            connection.start(queue: self.serverQueue!)
+            
+            print("Server accepted connection \(connection)")
+        } else {
+            let connection = NetworkConnection(nwConnection: nwConnection)
+            connection.delegate = self
+            connection.start(queue: self.serverQueue!)
+            guard let data = try? JSONEncoder().encode(AccessDeniedMessage()) else { return }
+            
+            connection.send(data: data)
+        }
     }
     
     func addNewName(id: Int, name: String) {
-        self.namesByID[id] = name
+        if namesByID.count < maxConnectionsAmount {
+            self.namesByID[id] = name
+        }
     }
     
     func addNewAnswer(id: Int, answer: Bool) {
@@ -132,7 +146,7 @@ class NetworkServer: NetworkConnectionDelegate
     
     func sendToAllPlayersData(completion: @escaping (Data) -> Void ) {
         guard let data = try? JSONEncoder().encode(PlayersMessage(playersAmount: "\(namesByID.count)",
-                                                       maxPlayersAmount: "20",
+                                                       maxPlayersAmount: "\(maxConnectionsAmount)",
                                                        playersName: namesByID.values.sorted())
         ) else { return }
         
@@ -163,7 +177,7 @@ class NetworkServer: NetworkConnectionDelegate
         self.sendToAllPlayersData() { _ in }
         
         guard let data = try? JSONEncoder().encode(PlayersMessage(playersAmount: "\(namesByID.count)",
-                                                       maxPlayersAmount: "20",
+                                                       maxPlayersAmount: "\(maxConnectionsAmount)",
                                                        playersName: namesByID.values.sorted())
         ) else { return }
         
