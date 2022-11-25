@@ -7,6 +7,7 @@
 
 import Foundation
 import Network
+import CoreData
 
 class ViewModel: ObservableObject {
     
@@ -28,6 +29,107 @@ class ViewModel: ObservableObject {
     
     private var id: UUID?
     private var questions: QuizModel?
+    
+    private let container: NSPersistentContainer
+    
+    init() {
+        container = NSPersistentContainer(name: "CoreDataModel")
+        container.loadPersistentStores { (description, error) in
+            if let error = error {
+                fatalError("Error loading Core Data: \(error.localizedDescription)")
+            }
+        }
+        fetchData()
+    }
+    
+    func fetchData() {
+        let request = NSFetchRequest<Quiz>(entityName: "Quiz")
+        
+        do {
+            let fetched = try container.viewContext.fetch(request)
+            var model = [QuizModel]()
+            for quiz in fetched {
+                guard let name = quiz.name else { return }
+                guard let id = quiz.id else { return }
+                guard let questions = quiz.relationship?.allObjects as? [Questions] else { return }
+                var questionModel = [QuestionModel]()
+                for question in questions {
+                    questionModel.append(QuestionModel(question: question.question ?? "error",
+                                                       firstAnswer: question.firstQuestion ?? "error",
+                                                       secondAnswer: question.secondQuestion ?? "error",
+                                                       thirdAnswer: question.thirdQuestion ?? "error",
+                                                       fourthAnswer: question.fourthQuestion ?? "error",
+                                                       answer: question.answer ?? "error")
+                    )
+                }
+                model.append(QuizModel(id: id, name: name, questionsModel: questionModel))
+            }
+            quizModel = model
+            self.objectWillChange.send()
+        } catch let error {
+            print("Fetching error: \(error.localizedDescription)")
+        }
+    }
+    
+    func addData(quizModel: QuizModel) {
+        let newQuiz = Quiz(context: container.viewContext)
+        newQuiz.name = quizModel.name
+        newQuiz.id = quizModel.id
+        for question in quizModel.questionsModel {
+            let newQuestion = Questions(context: container.viewContext)
+            newQuestion.question = question.question
+            newQuestion.firstQuestion = question.firstAnswer
+            newQuestion.secondQuestion = question.secondAnswer
+            newQuestion.thirdQuestion = question.thirdAnswer
+            newQuestion.fourthQuestion = question.fourthAnswer
+            newQuestion.answer = question.answer
+            newQuiz.addToRelationship(newQuestion)
+        }
+        saveData()
+    }
+    
+    func updateData(id: UUID, name: String, questions: [QuestionModel]) {
+        let request = NSFetchRequest<Quiz>(entityName: "Quiz")
+        request.predicate = NSPredicate(format: "id = %@", id as CVarArg)
+        
+        let results = try? container.viewContext.fetch(request)
+        
+        results?.first?.name = name
+        results?.first?.relationship = NSSet()
+        for question in questions {
+            let newQuestion = Questions(context: container.viewContext)
+            newQuestion.question = question.question
+            newQuestion.firstQuestion = question.firstAnswer
+            newQuestion.secondQuestion = question.secondAnswer
+            newQuestion.thirdQuestion = question.thirdAnswer
+            newQuestion.fourthQuestion = question.fourthAnswer
+            newQuestion.answer = question.answer
+            results?.first?.addToRelationship(newQuestion)
+        }
+        saveData()
+    }
+    
+    func deleteQuiz(indexSet: IndexSet) {
+        guard let index = indexSet.first else { return }
+        let id = quizModel[index].id
+        
+        let request = NSFetchRequest<Quiz>(entityName: "Quiz")
+        request.predicate = NSPredicate(format: "id = %@", id as CVarArg)
+        
+        guard let result = try? container.viewContext.fetch(request).first else { return }
+        
+        container.viewContext.delete(result)
+        saveData()
+    }
+    
+    func saveData() {
+        do {
+            try container.viewContext.save()
+            fetchData()
+        } catch let error {
+            print("Error saving Core Data: \(error.localizedDescription)")
+        }
+    }
     
     func setQuestions(quizModel: QuizModel) {
         self.questions = quizModel
@@ -150,7 +252,7 @@ class ViewModel: ObservableObject {
                                                 answer: question.answer,
                                                 questionsAmount: [self.currentIndex + 1, self.questions!.questionsModel.count]
                     )
-                }                
+                }
                 self.showQuestionView = true
                 self.currentIndex += 1
             }

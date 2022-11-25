@@ -37,7 +37,7 @@ struct LobbyView: View {
             
             if isHost {
                 Button {
-                    viewModel.startGame(time: 10)
+                    viewModel.startGame(time: 1)
                 } label: {
                     VStack {
                         Spacer()

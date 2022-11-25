@@ -51,9 +51,12 @@ struct NewQuizView: View {
                         showAlert = true
                     } else {
                         if !viewModel.quizModel.contains(quizModel) {
-                            viewModel.quizModel.append(quizModel)
+                            viewModel.addData(quizModel: quizModel)
                         } else {
-                            viewModel.objectWillChange.send()
+                            viewModel.updateData(id: quizModel.id,
+                                                 name: quizModel.name,
+                                                 questions: quizModel.questionsModel
+                            )
                         }
                         showView = false
                     }

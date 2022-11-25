@@ -15,6 +15,7 @@
 		F65F57E82926107F00B8558C /* ResultsMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F65F57E72926107F00B8558C /* ResultsMessage.swift */; };
 		F65F58502927C3BD00B8558C /* AccessDeniedMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F65F584F2927C3BD00B8558C /* AccessDeniedMessage.swift */; };
 		F6690ECE2931045000F4F8EA /* ResultsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6690ECD2931045000F4F8EA /* ResultsModel.swift */; };
+		F6690ED9293159B100F4F8EA /* CoreDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F6690ED7293159B100F4F8EA /* CoreDataModel.xcdatamodeld */; };
 		F688F53928CE6C2F001FA786 /* Quiz_gameApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F688F53828CE6C2F001FA786 /* Quiz_gameApp.swift */; };
 		F688F53D28CE6C31001FA786 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F688F53C28CE6C31001FA786 /* Assets.xcassets */; };
 		F688F54028CE6C31001FA786 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F688F53F28CE6C31001FA786 /* Preview Assets.xcassets */; };
@@ -46,6 +47,7 @@
 		F65F57E72926107F00B8558C /* ResultsMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsMessage.swift; sourceTree = "<group>"; };
 		F65F584F2927C3BD00B8558C /* AccessDeniedMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessDeniedMessage.swift; sourceTree = "<group>"; };
 		F6690ECD2931045000F4F8EA /* ResultsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsModel.swift; sourceTree = "<group>"; };
+		F6690ED8293159B100F4F8EA /* CoreDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreDataModel.xcdatamodel; sourceTree = "<group>"; };
 		F688F53528CE6C2F001FA786 /* Quiz game.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Quiz game.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F688F53828CE6C2F001FA786 /* Quiz_gameApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Quiz_gameApp.swift; sourceTree = "<group>"; };
 		F688F53C28CE6C31001FA786 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -119,6 +121,7 @@
 				F6CB1856291403C300D619C7 /* Views */,
 				F688F53828CE6C2F001FA786 /* Quiz_gameApp.swift */,
 				F688F53C28CE6C31001FA786 /* Assets.xcassets */,
+				F6690ED7293159B100F4F8EA /* CoreDataModel.xcdatamodeld */,
 				F688F53E28CE6C31001FA786 /* Preview Content */,
 			);
 			path = "Quiz game";
@@ -271,6 +274,7 @@
 				F68E732C2916DAD300B4B1C6 /* NetworkServer.swift in Sources */,
 				F68E73192915516D00B4B1C6 /* PlayerModel.swift in Sources */,
 				F6CB184F2913D8DE00D619C7 /* ViewModel.swift in Sources */,
+				F6690ED9293159B100F4F8EA /* CoreDataModel.xcdatamodeld in Sources */,
 				F6CB18552913F5D200D619C7 /* QuizModel.swift in Sources */,
 				F6CB18512913E37700D619C7 /* NewRoomView.swift in Sources */,
 				F65F57E82926107F00B8558C /* ResultsMessage.swift in Sources */,
@@ -489,6 +493,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		F6690ED7293159B100F4F8EA /* CoreDataModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				F6690ED8293159B100F4F8EA /* CoreDataModel.xcdatamodel */,
+			);
+			currentVersion = F6690ED8293159B100F4F8EA /* CoreDataModel.xcdatamodel */;
+			path = CoreDataModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = F688F52D28CE6C2F001FA786 /* Project object */;
 }
