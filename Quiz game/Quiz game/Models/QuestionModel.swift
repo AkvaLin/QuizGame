@@ -14,13 +14,27 @@ class QuestionModel: Identifiable, ObservableObject {
     @Published var thirdAnswer: String
     @Published var fourthAnswer: String
     @Published var answer: String
+    @Published var questionsAmount: [Int]
+    @Published var showButtons: Bool = true
     
-    init(question: String = "", firstAnswer: String = "", secondAnswer: String = "", thridAnswer: String = "", fourthAnswer: String = "", answer: String = "") {
+    init(question: String = "", firstAnswer: String = "", secondAnswer: String = "", thirdAnswer: String = "", fourthAnswer: String = "", answer: String = "", questionsAmount: [Int] = [Int]()) {
         self.question = question
         self.firstAnswer = firstAnswer
         self.secondAnswer = secondAnswer
-        self.thirdAnswer = thridAnswer
+        self.thirdAnswer = thirdAnswer
         self.fourthAnswer = fourthAnswer
         self.answer = answer
+        self.questionsAmount = questionsAmount
+    }
+    
+    func setup(question: String, firstAnswer: String, secondAnswer: String, thirdAnswer: String, fourthAnswer: String, answer: String, questionsAmount: [Int]) {
+        self.question = question
+        self.firstAnswer = firstAnswer
+        self.secondAnswer = secondAnswer
+        self.thirdAnswer = thirdAnswer
+        self.fourthAnswer = fourthAnswer
+        self.answer = answer
+        self.questionsAmount = questionsAmount
+        self.showButtons = true
     }
 }

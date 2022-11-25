@@ -27,7 +27,7 @@ class NetworkServer: NetworkConnectionDelegate
     
     private var connectionsByID: [Int: NetworkConnection] = [:]
     private var namesByID: [Int: String] = [:]
-    private var answersByID: [Int: [Bool]] = [:]
+    private var answersByID: [Int: Int] = [:]
     
     init(name: String?, maxConnectionsAmount: Int)
     {
@@ -87,11 +87,15 @@ class NetworkServer: NetworkConnectionDelegate
     func addNewName(id: Int, name: String) {
         if namesByID.count < maxConnectionsAmount {
             self.namesByID[id] = name
+            self.answersByID[id] = 0
         }
     }
     
     func addNewAnswer(id: Int, answer: Bool) {
-        self.answersByID[id]?.append(answer)
+        if answer {
+            self.answersByID[id]? += 1
+        }
+        print(self.answersByID)
     }
 
     func stop()
@@ -152,6 +156,19 @@ class NetworkServer: NetworkConnectionDelegate
         
         sendToAll(data: data)
         
+        completion(data)
+    }
+    
+    func sendToAllResultsData(completion: @escaping (Data) -> Void) {
+        let keys = namesByID.keys
+        var results = [String: Int]()
+        for playerKey in keys {
+            results[namesByID[playerKey] ?? "UnknowP layer"] = answersByID[playerKey]
+        }
+        
+        guard let data = try? JSONEncoder().encode(ResultsMessage(results: results)) else { return }
+        
+        sendToAll(data: data)
         completion(data)
     }
     

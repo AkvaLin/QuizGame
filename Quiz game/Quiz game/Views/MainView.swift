@@ -11,7 +11,6 @@ struct MainView: View {
     
     @StateObject var viewModel: ViewModel
     @State var isNewRoomViewShowing: Bool = false
-    @State var showView: Bool = false
     @State var showPersonAlert: Bool = false
     
     @State var name: String = UserDefaults.standard.string(forKey: "playerName") ?? "Player"
@@ -25,11 +24,16 @@ struct MainView: View {
                             NavigationLink(destination: LobbyView(isHost: .constant(false),
                                                                   viewModel: viewModel,
                                                                   roomModel: room,
-                                                                  showView: $showView, isAlertPresented: $viewModel.alertError).onAppear {
-                                guard let endPoint = room.endPoint else { return }
-                                viewModel.startConnection(endPoint: endPoint)
-                                viewModel.currentRoom = room
-                            }) {
+                                                                  showView: $viewModel.showLobbyView, isAlertPresented: $viewModel.alertError)
+                                .onAppear {
+                                    guard let endPoint = room.endPoint else { return }
+                                    viewModel.startConnection(endPoint: endPoint)
+                                    viewModel.currentRoom = room
+                                }
+                                .onDisappear {
+                                    viewModel.cancelConnection()
+                                }
+                            ) {
                                 HStack {
                                     Circle()
                                         .frame(width: 45, height: 45)
@@ -44,14 +48,12 @@ struct MainView: View {
                                             .lineLimit(2)
                                     }
                                     .padding([.leading, .trailing])
-                                    Spacer()
-                                    Text("\(room.playersAmount)/\(room.maxPlayersAmount)")
                                 }
                             }
                         }
                     }
                 }
-
+                
                 Button {
                     isNewRoomViewShowing = true
                 } label: {
@@ -104,7 +106,6 @@ struct MainView: View {
 
 struct MainView_Previews: PreviewProvider {
     static var previews: some View {
-        MainView(viewModel:
-                    ViewModel())
+        MainView(viewModel: ViewModel())
     }
 }

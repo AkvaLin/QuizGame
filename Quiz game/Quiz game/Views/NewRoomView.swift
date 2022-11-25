@@ -16,10 +16,9 @@ struct NewRoomView: View {
     @State var showDocumentPicker: Bool = false
     @State var showNewQuizView: Bool = false
     @State var quiz: QuizModel? = nil
-    @State var showView: Bool = false
     @State var playersAmount: Int = 2
+    @State var choosedQuiz: QuizModel?
     
-    private let server: NetworkServer? = nil
     private let playersAmountArr = Array(2...20)
     
     var body: some View {
@@ -30,7 +29,7 @@ struct NewRoomView: View {
                 
                 TextField("Название", text: $name)
                     .textFieldStyle(.roundedBorder)
-                .padding()
+                    .padding()
                 
                 HStack {
                     Text("Максимальное количество игроков")
@@ -42,26 +41,43 @@ struct NewRoomView: View {
                     }
                 }
                 
-                if let quizs = viewModel.quizModel,
-                    quizs.count > 0 {
-                    Text("Выбрать викторину")
-                        .padding()
-                    
-                    List {
-                        ForEach(quizs) { quiz in
-                            HStack {
-                                Text(quiz.name!)
-                                Spacer()
-                                Text(quiz.questionsAmount ?? "")
-                            }
-                            .onTapGesture {
-                                self.quiz = quiz
-                                showNewQuizView = true
+                if viewModel.quizModel.count > 0 {
+                    HStack {
+                        Text("Выбрать викторину")
+                            .padding()
+                        Picker("", selection: $choosedQuiz) {
+                            ForEach(viewModel.quizModel, id: \.self) { quiz in
+                                Text("\(quiz.name)").tag(quiz as QuizModel?)
                             }
                         }
                     }
+                    .onAppear {
+                        choosedQuiz = viewModel.quizModel.last
+                    }
+                    .onDisappear {
+                        choosedQuiz = nil
+                    }
+                    
+                    List {
+                        ForEach(viewModel.quizModel) { quiz in
+                            Button {
+                                self.quiz = quiz
+                                showNewQuizView = true
+                            } label: {
+                                HStack {
+                                    Text(quiz.name)
+                                    Spacer()
+                                    Text("\(quiz.questionsModel.count)")
+                                }
+                            }
+                        }
+                        .onDelete(perform: delete)
+                    }
                     .listStyle(.plain)
                     .padding()
+                    .toolbar {
+                        EditButton()
+                    }
                 }
                 
                 HStack(spacing: 20) {
@@ -71,46 +87,49 @@ struct NewRoomView: View {
                     }
                     .buttonStyle(.bordered)
                     
-
-                    Button {
-                        showDocumentPicker = true
-                    } label: {
-                        Image(systemName: "folder")
-                    }
-                    .buttonStyle(.bordered)
-                    
+// MARK:  documnetPicker (not work yet)
+//                    Button {
+//                        showDocumentPicker = true
+//                    } label: {
+//                        Image(systemName: "folder")
+//                    }
+//                    .buttonStyle(.bordered)
                 }
                 .padding()
                 
-                Button {
-                    showView = true
-                    let model = RoomModel(name: name, maxPlayersAmount: playersAmount, endPoint: nil)
-                    viewModel.currentRoom = model
-                    viewModel.startServer(name: name)
-                } label: {
-                    VStack {
-                        Spacer()
-                        HStack {
+                if choosedQuiz != nil {
+                    Button {
+                        viewModel.showLobbyView = true
+                        let model = RoomModel(name: name, maxPlayersAmount: playersAmount, endPoint: nil)
+                        viewModel.currentRoom = model
+                        viewModel.setQuestions(quizModel: choosedQuiz!)
+                        viewModel.startServer(name: name)
+                    } label: {
+                        VStack {
                             Spacer()
-                            Text("Создать")
+                            HStack {
+                                Spacer()
+                                Text("Создать")
+                                Spacer()
+                            }
                             Spacer()
                         }
-                        Spacer()
                     }
+                    .buttonStyle(.borderedProminent)
+                    .buttonBorderShape(.roundedRectangle(radius: 15))
+                    .frame(width: 320, height: 50)
+                    .padding()
                 }
-                .buttonStyle(.borderedProminent)
-                .buttonBorderShape(.roundedRectangle(radius: 15))
-                .frame(width: 320, height: 50)
-                .padding()
             }
             .navigationTitle("Создать комнату")
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Image(systemName: "chevron.backward")
-                        .onTapGesture {
-                            isNewRoomViewShowing = false
-                        }
-                        .foregroundColor(Color.accentColor)
+                    Button {
+                        isNewRoomViewShowing = false
+                    } label: {
+                        Image(systemName: "chevron.backward")
+                            .foregroundColor(Color.accentColor)
+                    }
                 }
             }
         }
@@ -119,30 +138,35 @@ struct NewRoomView: View {
         }
         .sheet(isPresented: $showNewQuizView) {
             if let quiz = self.quiz {
-                NewQuizView(quizModel: quiz)
+                NewQuizView(quizModel: quiz, viewModel: viewModel, showView: $showNewQuizView)
             } else {
-                NewQuizView(quizModel: QuizModel())
+                NewQuizView(quizModel: QuizModel(name: ""), viewModel: viewModel, showView: $showNewQuizView)
             }
         }
-        .fullScreenCover(isPresented: $showView) {
+        .fullScreenCover(isPresented: $viewModel.showLobbyView) {
             NavigationView {
                 LobbyView(isHost: .constant(true),
                           viewModel: viewModel,
                           roomModel: viewModel.currentRoom!,
-                          showView: $showView, isAlertPresented: .constant(false)
+                          showView: $viewModel.showLobbyView, isAlertPresented: .constant(false)
                 )
-                    .toolbar {
-                        ToolbarItem(placement: .cancellationAction) {
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button {
+                            viewModel.showLobbyView = false
+                            viewModel.stopServer()
+                        } label: {
                             Image(systemName: "chevron.backward")
-                                .onTapGesture {
-                                    showView = false
-                                    viewModel.stopServer()
-                                }
                                 .foregroundColor(Color.accentColor)
                         }
                     }
+                }
             }
         }
+    }
+    
+    func delete(at offsets: IndexSet) {
+        viewModel.quizModel.remove(atOffsets: offsets)
     }
 }
 

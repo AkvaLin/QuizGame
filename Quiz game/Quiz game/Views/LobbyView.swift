@@ -37,7 +37,7 @@ struct LobbyView: View {
             
             if isHost {
                 Button {
-                    viewModel.showQuestionView = true
+                    viewModel.startGame(time: 10)
                 } label: {
                     VStack {
                         Spacer()
@@ -62,12 +62,21 @@ struct LobbyView: View {
             }
         }
         .fullScreenCover(isPresented: $viewModel.showQuestionView) {
-            QuestionView(showView: $showView, showQuestionView: $viewModel.showQuestionView)
+            QuestionView(viewModel: viewModel,
+                         questionModel: viewModel.currentQuestion ?? QuestionModel(),
+                         showView: $showView,
+                         showQuestionView: $viewModel.showQuestionView
+            )
         }
         .alert("Нет свободных мест", isPresented: $isAlertPresented) {
             Button("Ok", role: .cancel) {
                 dismiss()
                 viewModel.cancelConnection()
+            }
+        }
+        .onChange(of: showView) { value in
+            if !value {
+                dismiss()
             }
         }
     }

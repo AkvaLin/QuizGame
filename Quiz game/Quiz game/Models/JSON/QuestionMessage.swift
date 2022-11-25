@@ -17,4 +17,5 @@ struct QuestionMessage: Codable {
     let thirdAnswer: String
     let fourthAnswer: String
     let answer: String
+    let questionsAmount: [Int]
 }

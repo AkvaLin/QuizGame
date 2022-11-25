@@ -11,24 +11,7 @@ import SwiftUI
 struct Quiz_gameApp: App {
     var body: some Scene {
         WindowGroup {
-            MainView(viewModel: ViewModel(
-                                          quizModel: [
-                                            QuizModel(name: "Викторина", questionsModel: [QuestionModel]()),
-                                            QuizModel(name: "Викторина", questionsModel: [QuestionModel]()),
-                                            QuizModel(name: "Викторина", questionsModel: [QuestionModel]()),
-                                            QuizModel(name: "Викторина", questionsModel: [QuestionModel]()),
-                                            QuizModel(name: "Викторина", questionsModel: [QuestionModel]()),
-                                            QuizModel(name: "Викторина", questionsModel: [QuestionModel]()),
-                                            QuizModel(name: "Викторина", questionsModel: [QuestionModel]()),
-                                            QuizModel(name: "Викторина", questionsModel: [QuestionModel]()),
-                                            QuizModel(name: "Викторина", questionsModel: [QuestionModel]()),
-                                            QuizModel(name: "Викторина", questionsModel: [QuestionModel]()),
-                                            QuizModel(name: "Викторина", questionsModel: [QuestionModel]()),
-                                            QuizModel(name: "Викторина", questionsModel: [QuestionModel]()),
-                                            QuizModel(name: "Викторина", questionsModel: [QuestionModel]())
-                                            ]
-                                          )
-            )
+            MainView(viewModel: ViewModel())
         }
     }
 }

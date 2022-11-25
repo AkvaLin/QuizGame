@@ -18,8 +18,11 @@ struct NewQuestionView: View {
     @State var secondAnswer: String
     @State var thirdAnswer: String
     @State var fourthAnswer: String
-    @State var answer: String
+    @State var answerNumber: Int = 1
     @State var showAlert: Bool = false
+    
+    @State var answer: String = ""
+    private let answerNumbers = Array(1...4)
     
     var body: some View {
         VStack {
@@ -40,7 +43,7 @@ struct NewQuestionView: View {
                 RoundedRectangle(cornerRadius: 15)
                     .foregroundColor(.gray.opacity(0.2))
                     .overlay {
-                        TextField("Вариант 3", text: $thirdAnswer)
+                        TextField("Вариант 2", text: $secondAnswer)
                             .padding()
                     }
             }
@@ -49,7 +52,7 @@ struct NewQuestionView: View {
                 RoundedRectangle(cornerRadius: 15)
                     .foregroundColor(.gray.opacity(0.2))
                     .overlay {
-                        TextField("Вариант 2", text: $secondAnswer)
+                        TextField("Вариант 3", text: $thirdAnswer)
                             .padding()
                     }
                 RoundedRectangle(cornerRadius: 15)
@@ -63,11 +66,32 @@ struct NewQuestionView: View {
             RoundedRectangle(cornerRadius: 15)
                 .foregroundColor(.gray.opacity(0.2))
                 .overlay {
-                    TextField("Ответ", text: $answer)
-                        .padding()
+                    HStack {
+                        Text("Ответ: ")
+                        Picker("", selection: $answerNumber) {
+                            ForEach(answerNumbers, id: \.self) { amount in
+                                Text("\(amount)")
+                            }
+                        }
+                    }
+                    .padding()
                 }
                 .padding()
-            Button("Сохранить") {
+            Button {
+                
+                switch answerNumber {
+                case 1:
+                    answer = firstAnswer
+                case 2:
+                    answer = secondAnswer
+                case 3:
+                    answer = thirdAnswer
+                case 4:
+                    answer = fourthAnswer
+                default:
+                    break
+                }
+                
                 if !question.isEmpty,
                    !firstAnswer.isEmpty,
                    !secondAnswer.isEmpty,
@@ -78,7 +102,7 @@ struct NewQuestionView: View {
                         questionModel.append(QuestionModel(question: question,
                                                            firstAnswer: firstAnswer,
                                                            secondAnswer: secondAnswer,
-                                                           thridAnswer: thirdAnswer,
+                                                           thirdAnswer: thirdAnswer,
                                                            fourthAnswer: fourthAnswer,
                                                            answer: answer))
                     } else {
@@ -94,8 +118,20 @@ struct NewQuestionView: View {
                 } else {
                     showAlert = true
                 }
+            } label: {
+                VStack {
+                    Spacer()
+                    HStack {
+                        Spacer()
+                        Text("Сохранить")
+                        Spacer()
+                    }
+                    Spacer()
+                }
             }
             .buttonStyle(.borderedProminent)
+            .buttonBorderShape(.roundedRectangle(radius: 15))
+            .frame(width: 320, height: 50)
             .padding()
         }
         .alert("Заполните все поля", isPresented: $showAlert) {

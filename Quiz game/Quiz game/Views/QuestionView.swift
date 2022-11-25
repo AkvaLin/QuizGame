@@ -9,13 +9,9 @@ import SwiftUI
 
 struct QuestionView: View {
     
-    @State var firstButtonTitle: String = "Button1"
-    @State var secondButtonTitle: String = "Button2"
-    @State var thirdButtonTitle: String = "Button3"
-    @State var fourthButtonTitle: String = "Button4"
-    @State var questionAmount: Int = 20
-    @State var currentQuestion: Int = 1
-    @State var showAlert = false
+    @ObservedObject var viewModel: ViewModel
+    @ObservedObject var questionModel: QuestionModel
+    @State var showAlert: Bool = false
     @Binding var showView: Bool
     @Binding var showQuestionView: Bool
     
@@ -26,6 +22,10 @@ struct QuestionView: View {
                 ZStack {
                     RoundedRectangle(cornerRadius: 25)
                         .foregroundColor(.gray.opacity(0.25))
+                        .overlay {
+                            Text(questionModel.question)
+                                .padding()
+                        }
                         .padding()
                 }
                 
@@ -42,104 +42,104 @@ struct QuestionView: View {
                                         endPoint: .trailing
                                     )
                                 )
-                                .frame(width: geo.size.width * CGFloat(Float(currentQuestion) / Float(questionAmount)))
+                                .frame(width: geo.size.width * CGFloat(Float(questionModel.questionsAmount[0]) / Float(questionModel.questionsAmount[1])))
                             }
                         }
                         .frame(height: 25)
-                    Text("\(currentQuestion)/\(questionAmount)")
+                    Text("\(questionModel.questionsAmount[0])/\(questionModel.questionsAmount[1])")
                 }
                 .padding(.top, 1.0)
                 .padding([.leading, .trailing, .bottom])
                 
-                HStack(spacing: 20) {
-                    VStack(spacing: 20) {
-                        Button {
-                            withAnimation(.easeInOut) {
-                                if questionAmount > currentQuestion {
-                                    currentQuestion += 1
+                if questionModel.showButtons {
+                    HStack(spacing: 20) {
+                        VStack(spacing: 20) {
+                            Button {
+                                withAnimation(.easeInOut) {
+                                    questionModel.showButtons = false
+                                    viewModel.sendAnswer(answer: questionModel.firstAnswer == questionModel.answer)
+                                }
+                            } label: {
+                                VStack {
+                                    Spacer()
+                                    HStack {
+                                        Spacer()
+                                        Text(questionModel.firstAnswer)
+                                        Spacer()
+                                    }
+                                    Spacer()
                                 }
                             }
-                        } label: {
-                            VStack {
-                                Spacer()
-                                HStack {
+                            .buttonStyle(.borderedProminent)
+                            .buttonBorderShape(.roundedRectangle(radius: 15))
+                            
+                            
+                            Button {
+                                withAnimation(.easeInOut) {
+                                    questionModel.showButtons = false
+                                    viewModel.sendAnswer(answer: questionModel.thirdAnswer == questionModel.answer)
+                                }
+                            } label: {
+                                VStack {
                                     Spacer()
-                                    Text(firstButtonTitle)
+                                    HStack {
+                                        Spacer()
+                                        Text(questionModel.thirdAnswer)
+                                        Spacer()
+                                    }
                                     Spacer()
                                 }
-                                Spacer()
                             }
+                            .buttonStyle(.borderedProminent)
+                            .buttonBorderShape(.roundedRectangle(radius: 15))
+                            
                         }
-                        .buttonStyle(.borderedProminent)
-                        .buttonBorderShape(.roundedRectangle(radius: 15))
-                        
-                        
-                        Button {
-                            withAnimation(.easeInOut) {
-                                if questionAmount > currentQuestion {
-                                    currentQuestion += 1
+                        VStack(spacing: 20) {
+                            Button {
+                                withAnimation(.easeInOut) {
+                                    questionModel.showButtons = false
+                                    viewModel.sendAnswer(answer: questionModel.secondAnswer == questionModel.answer)
                                 }
-                            }
-                        } label: {
-                            VStack {
-                                Spacer()
-                                HStack {
+                            } label: {
+                                VStack {
                                     Spacer()
-                                    Text(firstButtonTitle)
+                                    HStack {
+                                        Spacer()
+                                        Text(questionModel.secondAnswer)
+                                        Spacer()
+                                    }
                                     Spacer()
                                 }
-                                Spacer()
                             }
+                            .buttonStyle(.borderedProminent)
+                            .buttonBorderShape(.roundedRectangle(radius: 15))
+                            
+                            Button {
+                                withAnimation(.easeInOut) {
+                                    viewModel.sendAnswer(answer: questionModel.fourthAnswer == questionModel.answer)
+                                    questionModel.showButtons = false
+                                }
+                            } label: {
+                                VStack {
+                                    Spacer()
+                                    HStack {
+                                        Spacer()
+                                        Text(questionModel.fourthAnswer)
+                                        Spacer()
+                                    }
+                                    Spacer()
+                                }
+                            }
+                            .buttonStyle(.borderedProminent)
+                            .buttonBorderShape(.roundedRectangle(radius: 15))
+                            
                         }
-                        .buttonStyle(.borderedProminent)
-                        .buttonBorderShape(.roundedRectangle(radius: 15))
-                        
                     }
-                    VStack(spacing: 20) {
-                        Button {
-                            withAnimation(.easeInOut) {
-                                if questionAmount > currentQuestion {
-                                    currentQuestion += 1
-                                }
-                            }
-                        } label: {
-                            VStack {
-                                Spacer()
-                                HStack {
-                                    Spacer()
-                                    Text(secondButtonTitle)
-                                    Spacer()
-                                }
-                                Spacer()
-                            }
-                        }
-                        .buttonStyle(.borderedProminent)
-                        .buttonBorderShape(.roundedRectangle(radius: 15))
-                        
-                        
-                        Button {
-                            withAnimation(.easeInOut) {
-                                if questionAmount > currentQuestion {
-                                    currentQuestion += 1
-                                }
-                            }
-                        } label: {
-                            VStack {
-                                Spacer()
-                                HStack {
-                                    Spacer()
-                                    Text(fourthButtonTitle)
-                                    Spacer()
-                                }
-                                Spacer()
-                            }
-                        }
-                        .buttonStyle(.borderedProminent)
-                        .buttonBorderShape(.roundedRectangle(radius: 15))
-                        
-                    }
+                    .padding()
+                } else {
+                    Text("Ожидание следующего вопроса...")
+                        .padding()
                 }
-                .padding()
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -149,14 +149,18 @@ struct QuestionView: View {
                         }
                 }
             }
-            .alert("Вы действительно хоитите выйти из игры?", isPresented: $showAlert) {
+            .alert("Вы действительно хоитите завершить игру?", isPresented: $showAlert) {
                 Button("Да", role: .destructive) {
                     showView = false
                     showQuestionView = false
+                    viewModel.cancelTimer()
+                    viewModel.stopServer()
+                    viewModel.cancelConnection()
                 }
-                Button("Нет", role: .cancel) {
-                    
-                }
+                Button("Нет", role: .cancel) { }
+            }
+            .fullScreenCover(isPresented: $viewModel.showResultsView) {
+                EndGameView(results: viewModel.results, viewModel: viewModel)
             }
         }
     }
@@ -164,6 +168,6 @@ struct QuestionView: View {
 
 struct QuestionView_Previews: PreviewProvider {
     static var previews: some View {
-        QuestionView(showView: .constant(false), showQuestionView: .constant(true))
+        QuestionView(viewModel: ViewModel(), questionModel: QuestionModel(questionsAmount: [2,10]), showView: .constant(true), showQuestionView: .constant(true))
     }
 }

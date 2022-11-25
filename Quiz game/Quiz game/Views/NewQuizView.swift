@@ -9,16 +9,24 @@ import SwiftUI
 
 struct NewQuizView: View {
     
-    @State var quizName: String = ""
     @ObservedObject var quizModel: QuizModel
+    @ObservedObject var viewModel: ViewModel
+    @Binding var showView: Bool
     @State var showNewQuestionView: Bool = false
     @State var question: QuestionModel? = nil
+    @State var showAlert: Bool = false
+    
+    init(quizModel: QuizModel, viewModel: ViewModel, showView: Binding<Bool>) {
+        self.quizModel = quizModel
+        self.viewModel = viewModel
+        self._showView = showView
+    }
     
     var body: some View {
         
         NavigationView {
             VStack {
-                TextField("", text: $quizName)
+                TextField("Название викторины", text: $quizModel.name)
                     .textFieldStyle(.roundedBorder)
                     .padding()
                 Button("Добавить вопрос") {
@@ -37,9 +45,33 @@ struct NewQuizView: View {
                 .toolbar {
                     EditButton()
                 }
-            }
-            .onDisappear {
                 
+                Button {
+                    if quizModel.questionsModel.count < 1 {
+                        showAlert = true
+                    } else {
+                        if !viewModel.quizModel.contains(quizModel) {
+                            viewModel.quizModel.append(quizModel)
+                        } else {
+                            viewModel.objectWillChange.send()
+                        }
+                        showView = false
+                    }
+                } label: {
+                    VStack {
+                        Spacer()
+                        HStack {
+                            Spacer()
+                            Text("Сохранить")
+                            Spacer()
+                        }
+                        Spacer()
+                    }
+                }
+                .buttonStyle(.borderedProminent)
+                .buttonBorderShape(.roundedRectangle(radius: 15))
+                .frame(width: 320, height: 50)
+                .padding()
             }
         }
         .sheet(isPresented: $showNewQuestionView) {
@@ -64,6 +96,15 @@ struct NewQuizView: View {
                                 thirdAnswer: "",
                                 fourthAnswer: "",
                                 answer: "")
+            }
+        }
+        .alert("Добавьте хотя бы один вопрос", isPresented: $showAlert) {
+            Button("Ок", role: .none) { }
+        }
+        .onDisappear {
+            if quizModel.questionsModel.count < 1 {
+                guard let index = viewModel.quizModel.firstIndex(of: quizModel) else { return }
+                viewModel.quizModel.remove(at: index)
             }
         }
     }

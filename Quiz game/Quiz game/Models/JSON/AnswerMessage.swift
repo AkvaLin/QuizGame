@@ -9,7 +9,7 @@ import Foundation
 
 struct AnswerMessage: Codable {
     
-    var messageType: String = "hello"
+    var messageType: String = "answer"
 
     let answer: Bool
 }
