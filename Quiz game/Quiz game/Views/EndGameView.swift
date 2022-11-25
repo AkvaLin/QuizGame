@@ -30,7 +30,6 @@ struct EndGameView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Image(systemName: "x.circle")
                         .onTapGesture {
-                            viewModel.showLobbyView = false
                             viewModel.showQuestionView = false
                             viewModel.showResultsView = false
                         }

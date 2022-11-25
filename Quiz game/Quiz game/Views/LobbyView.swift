@@ -37,7 +37,7 @@ struct LobbyView: View {
             
             if isHost {
                 Button {
-                    viewModel.startGame(time: 1)
+                    viewModel.startGame(time: 10)
                 } label: {
                     VStack {
                         Spacer()
@@ -64,7 +64,7 @@ struct LobbyView: View {
         .fullScreenCover(isPresented: $viewModel.showQuestionView) {
             QuestionView(viewModel: viewModel,
                          questionModel: viewModel.currentQuestion ?? QuestionModel(),
-                         showView: $showView,
+                         showView: $viewModel.showQuestionView,
                          showQuestionView: $viewModel.showQuestionView
             )
         }
