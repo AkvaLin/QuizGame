@@ -14,10 +14,10 @@ struct LobbyView: View {
     @ObservedObject var roomModel: RoomModel
     @Binding var showView: Bool
     @Binding var isAlertPresented: Bool
+    @State var disableButton = false
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
-        
         VStack {
             List {
                 ForEach(roomModel.players, id: \.self) { name in
@@ -53,6 +53,7 @@ struct LobbyView: View {
                 .buttonBorderShape(.roundedRectangle(radius: 15))
                 .frame(width: 320, height: 50)
                 .padding()
+                .disabled(disableButton)
             }
         }
         .navigationTitle(roomModel.name)
@@ -86,6 +87,17 @@ struct LobbyView: View {
         }
         .onDisappear {
             viewModel.showEndGameAlert = false
+        }
+        .overlay {
+            if viewModel.showActivityIndicator {
+                ProgressView()
+                    .onAppear {
+                        disableButton = true
+                    }
+                    .onDisappear {
+                        disableButton = false
+                    }
+            }
         }
     }
 }

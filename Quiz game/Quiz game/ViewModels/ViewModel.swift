@@ -21,6 +21,7 @@ class ViewModel: ObservableObject {
     @Published var showLobbyView: Bool = false
     @Published var alertError: Bool = false
     @Published var showEndGameAlert: Bool = false
+    @Published var showActivityIndicator: Bool = false
     
     private var browser = NetworkBrowser()
     private var server: NetworkServer?
@@ -184,6 +185,7 @@ class ViewModel: ObservableObject {
     }
     
     func startGame(time: Double) {
+        showActivityIndicator = true
         if timer == nil {
             timer = Timer.scheduledTimer(timeInterval: time,
                                          target: self,
@@ -201,6 +203,7 @@ class ViewModel: ObservableObject {
     }
     
     @objc func timerAction() {
+        showActivityIndicator = false
         guard let model = questions?.questionsModel else { return }
         if model.count - 1 < currentIndex {
             cancelTimer()
