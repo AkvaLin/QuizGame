@@ -25,6 +25,9 @@ struct QuestionView: View {
                         .overlay {
                             Text(questionModel.question)
                                 .padding()
+                                .multilineTextAlignment(.center)
+                                .lineLimit(8)
+                                .fixedSize(horizontal: false, vertical: true)
                         }
                         .padding()
                 }

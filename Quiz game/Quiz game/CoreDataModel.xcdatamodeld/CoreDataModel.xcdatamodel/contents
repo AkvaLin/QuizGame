@@ -2,16 +2,16 @@
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21512" systemVersion="22A380" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Questions" representedClassName="Questions" syncable="YES" codeGenerationType="class">
         <attribute name="answer" attributeType="String"/>
-        <attribute name="firstQuestion" attributeType="String"/>
-        <attribute name="fourthQuestion" attributeType="String"/>
+        <attribute name="firstAnswer" attributeType="String"/>
+        <attribute name="fourthAnswer" attributeType="String"/>
         <attribute name="question" attributeType="String"/>
-        <attribute name="secondQuestion" attributeType="String"/>
-        <attribute name="thirdQuestion" attributeType="String"/>
-        <relationship name="relationship" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Quiz" inverseName="relationship" inverseEntity="Quiz"/>
+        <attribute name="secondAnswer" attributeType="String"/>
+        <attribute name="thirdAnswer" attributeType="String"/>
+        <relationship name="quiz" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Quiz" inverseName="questions" inverseEntity="Quiz"/>
     </entity>
     <entity name="Quiz" representedClassName="Quiz" syncable="YES" codeGenerationType="class">
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="name" optional="YES" attributeType="String"/>
-        <relationship name="relationship" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Questions" inverseName="relationship" inverseEntity="Questions"/>
+        <relationship name="questions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Questions" inverseName="quiz" inverseEntity="Questions"/>
     </entity>
 </model>

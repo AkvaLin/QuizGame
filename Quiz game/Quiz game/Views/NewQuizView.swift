@@ -114,7 +114,7 @@ struct NewQuizView: View {
         }
     }
     
-    func delete(at offsets: IndexSet) {
+    private func delete(at offsets: IndexSet) {
         quizModel.questionsModel.remove(atOffsets: offsets)
     }
 }
