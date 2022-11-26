@@ -35,7 +35,9 @@ struct EndGameView: View {
                 }
             }
             .onDisappear {
-                viewModel.showQuestionView = false
+                DispatchQueue.main.async {
+                    viewModel.showQuestionView = false
+                }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     viewModel.showEndGameAlert = true
                 }

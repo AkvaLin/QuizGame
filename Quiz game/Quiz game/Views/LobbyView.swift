@@ -86,7 +86,9 @@ struct LobbyView: View {
             }
         }
         .onDisappear {
-            viewModel.showEndGameAlert = false
+            DispatchQueue.main.async {
+                viewModel.showEndGameAlert = false
+            }
         }
         .overlay {
             if viewModel.showActivityIndicator {
