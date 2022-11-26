@@ -60,9 +60,8 @@ struct NewRoomView: View {
                     
                     List {
                         ForEach(viewModel.quizModel) { quiz in
-                            Button {
-                                self.quiz = quiz
-                                showNewQuizView = true
+                            NavigationLink {
+                                NewQuizView(quizModel: quiz, viewModel: viewModel, showView: $showNewQuizView)
                             } label: {
                                 HStack {
                                     Text(quiz.name)

@@ -15,6 +15,7 @@ struct NewQuizView: View {
     @State var showNewQuestionView: Bool = false
     @State var question: QuestionModel? = nil
     @State var showAlert: Bool = false
+    @Environment(\.dismiss) var dismiss
     
     init(quizModel: QuizModel, viewModel: ViewModel, showView: Binding<Bool>) {
         self.quizModel = quizModel
@@ -24,82 +25,83 @@ struct NewQuizView: View {
     
     var body: some View {
         
-        NavigationView {
-            VStack {
-                TextField("Название викторины", text: $quizModel.name)
-                    .textFieldStyle(.roundedBorder)
-                    .padding()
-                Button("Добавить вопрос") {
-                    self.question = nil
-                    showNewQuestionView = true
-                }
-                List {
-                    ForEach(quizModel.questionsModel) { question in
-                        Button(question.question) {
-                            self.question = question
-                            showNewQuestionView = true
-                        }
-                    }
-                    .onDelete(perform: delete)
-                }
-                .toolbar {
-                    EditButton()
-                }
-                
-                Button {
-                    if quizModel.questionsModel.count < 1 {
-                        showAlert = true
-                    } else {
-                        if !viewModel.quizModel.contains(quizModel) {
-                            viewModel.addData(quizModel: quizModel)
-                        } else {
-                            viewModel.updateData(id: quizModel.id,
-                                                 name: quizModel.name,
-                                                 questions: quizModel.questionsModel
-                            )
-                        }
-                        showView = false
-                    }
-                } label: {
-                    VStack {
-                        Spacer()
-                        HStack {
-                            Spacer()
-                            Text("Сохранить")
-                            Spacer()
-                        }
-                        Spacer()
-                    }
-                }
-                .buttonStyle(.borderedProminent)
-                .buttonBorderShape(.roundedRectangle(radius: 15))
-                .frame(width: 320, height: 50)
+        
+        VStack {
+            TextField("Название викторины", text: $quizModel.name)
+                .textFieldStyle(.roundedBorder)
                 .padding()
+            Button("Добавить вопрос") {
+                self.question = nil
+                showNewQuestionView = true
             }
+            List {
+                ForEach(quizModel.questionsModel) { question in
+                    NavigationLink {
+                        NewQuestionView(showNewQuestionView: $showNewQuestionView,
+                                        questionModel: $quizModel.questionsModel,
+                                        quizModel: quizModel,
+                                        model: question,
+                                        question: question.question,
+                                        firstAnswer: question.firstAnswer,
+                                        secondAnswer: question.secondAnswer,
+                                        thirdAnswer: question.thirdAnswer,
+                                        fourthAnswer: question.fourthAnswer,
+                                        answer: question.answer)
+                    } label: {
+                        HStack {
+                            Text(question.question)
+                        }
+                    }
+                    
+                }
+                .onDelete(perform: delete)
+            }
+            .toolbar {
+                EditButton()
+            }
+            
+            Button {
+                if quizModel.questionsModel.count < 1 {
+                    showAlert = true
+                } else {
+                    if !viewModel.quizModel.contains(quizModel) {
+                        viewModel.addData(quizModel: quizModel)
+                    } else {
+                        viewModel.updateData(id: quizModel.id,
+                                             name: quizModel.name,
+                                             questions: quizModel.questionsModel
+                        )
+                    }
+                    showView = false
+                    dismiss()
+                }
+            } label: {
+                VStack {
+                    Spacer()
+                    HStack {
+                        Spacer()
+                        Text("Сохранить")
+                        Spacer()
+                    }
+                    Spacer()
+                }
+            }
+            .buttonStyle(.borderedProminent)
+            .buttonBorderShape(.roundedRectangle(radius: 15))
+            .frame(width: 320, height: 50)
+            .padding()
         }
+        .navigationTitle(quizModel.name)
         .sheet(isPresented: $showNewQuestionView) {
-            if let question = self.question {
-                NewQuestionView(showNewQuestionView: $showNewQuestionView,
-                                questionModel: $quizModel.questionsModel,
-                                quizModel: quizModel,
-                                model: question,
-                                question: question.question,
-                                firstAnswer: question.firstAnswer,
-                                secondAnswer: question.secondAnswer,
-                                thirdAnswer: question.thirdAnswer,
-                                fourthAnswer: question.fourthAnswer,
-                                answer: question.answer)
-            } else {
-                NewQuestionView(showNewQuestionView: $showNewQuestionView,
-                                questionModel: $quizModel.questionsModel,
-                                quizModel: quizModel,
-                                question: "",
-                                firstAnswer: "",
-                                secondAnswer: "",
-                                thirdAnswer: "",
-                                fourthAnswer: "",
-                                answer: "")
-            }
+            NewQuestionView(showNewQuestionView: $showNewQuestionView,
+                            questionModel: $quizModel.questionsModel,
+                            quizModel: quizModel,
+                            question: "",
+                            firstAnswer: "",
+                            secondAnswer: "",
+                            thirdAnswer: "",
+                            fourthAnswer: "",
+                            answer: "")
         }
         .alert("Добавьте хотя бы один вопрос", isPresented: $showAlert) {
             Button("Ок", role: .none) { }

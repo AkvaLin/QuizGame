@@ -20,6 +20,7 @@ struct NewQuestionView: View {
     @State var fourthAnswer: String
     @State var answerNumber: Int = 1
     @State var showAlert: Bool = false
+    @Environment(\.dismiss) var dismiss
     
     @State var answer: String = ""
     private let answerNumbers = Array(1...4)
@@ -115,6 +116,7 @@ struct NewQuestionView: View {
                         quizModel.updateView()
                     }
                     showNewQuestionView = false
+                    dismiss()
                 } else {
                     showAlert = true
                 }
