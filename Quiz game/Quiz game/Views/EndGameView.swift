@@ -30,12 +30,14 @@ struct EndGameView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Image(systemName: "x.circle")
                         .onTapGesture {
-                            viewModel.showQuestionView = false
                             viewModel.showResultsView = false
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                                viewModel.showEndGameAlert = true
-                            }
                         }
+                }
+            }
+            .onDisappear {
+                viewModel.showQuestionView = false
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    viewModel.showEndGameAlert = true
                 }
             }
         }

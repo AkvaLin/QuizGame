@@ -8,6 +8,7 @@
 import Foundation
 
 class QuizModel: Identifiable, ObservableObject {
+    
     var id = UUID()
     @Published var name: String
     @Published var questionsModel = [QuestionModel]()

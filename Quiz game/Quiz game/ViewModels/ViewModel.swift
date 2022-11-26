@@ -44,7 +44,9 @@ class ViewModel: ObservableObject {
         fetchData()
     }
     
-    func fetchData() {
+    // MARK: - CoreData
+    
+    private func fetchData() {
         let request = NSFetchRequest<Quiz>(entityName: "Quiz")
         
         do {
@@ -53,14 +55,14 @@ class ViewModel: ObservableObject {
             for quiz in fetched {
                 guard let name = quiz.name else { return }
                 guard let id = quiz.id else { return }
-                guard let questions = quiz.relationship?.allObjects as? [Questions] else { return }
+                guard let questions = quiz.questions?.allObjects as? [Questions] else { return }
                 var questionModel = [QuestionModel]()
                 for question in questions {
                     questionModel.append(QuestionModel(question: question.question ?? "error",
-                                                       firstAnswer: question.firstQuestion ?? "error",
-                                                       secondAnswer: question.secondQuestion ?? "error",
-                                                       thirdAnswer: question.thirdQuestion ?? "error",
-                                                       fourthAnswer: question.fourthQuestion ?? "error",
+                                                       firstAnswer: question.firstAnswer ?? "error",
+                                                       secondAnswer: question.secondAnswer ?? "error",
+                                                       thirdAnswer: question.thirdAnswer ?? "error",
+                                                       fourthAnswer: question.fourthAnswer ?? "error",
                                                        answer: question.answer ?? "error")
                     )
                 }
@@ -80,12 +82,12 @@ class ViewModel: ObservableObject {
         for question in quizModel.questionsModel {
             let newQuestion = Questions(context: container.viewContext)
             newQuestion.question = question.question
-            newQuestion.firstQuestion = question.firstAnswer
-            newQuestion.secondQuestion = question.secondAnswer
-            newQuestion.thirdQuestion = question.thirdAnswer
-            newQuestion.fourthQuestion = question.fourthAnswer
+            newQuestion.firstAnswer = question.firstAnswer
+            newQuestion.secondAnswer = question.secondAnswer
+            newQuestion.thirdAnswer = question.thirdAnswer
+            newQuestion.fourthAnswer = question.fourthAnswer
             newQuestion.answer = question.answer
-            newQuiz.addToRelationship(newQuestion)
+            newQuiz.addToQuestions(newQuestion)
         }
         saveData()
     }
@@ -97,16 +99,16 @@ class ViewModel: ObservableObject {
         let results = try? container.viewContext.fetch(request)
         
         results?.first?.name = name
-        results?.first?.relationship = NSSet()
+        results?.first?.questions = NSSet()
         for question in questions {
             let newQuestion = Questions(context: container.viewContext)
             newQuestion.question = question.question
-            newQuestion.firstQuestion = question.firstAnswer
-            newQuestion.secondQuestion = question.secondAnswer
-            newQuestion.thirdQuestion = question.thirdAnswer
-            newQuestion.fourthQuestion = question.fourthAnswer
+            newQuestion.firstAnswer = question.firstAnswer
+            newQuestion.secondAnswer = question.secondAnswer
+            newQuestion.thirdAnswer = question.thirdAnswer
+            newQuestion.fourthAnswer = question.fourthAnswer
             newQuestion.answer = question.answer
-            results?.first?.addToRelationship(newQuestion)
+            results?.first?.addToQuestions(newQuestion)
         }
         saveData()
     }
@@ -124,7 +126,7 @@ class ViewModel: ObservableObject {
         saveData()
     }
     
-    func saveData() {
+    private func saveData() {
         do {
             try container.viewContext.save()
             fetchData()
@@ -133,9 +135,13 @@ class ViewModel: ObservableObject {
         }
     }
     
+    // MARK: - Networking
+    
     func setQuestions(quizModel: QuizModel) {
         self.questions = quizModel
     }
+    
+    // MARK: Browsing
     
     func startBrowsing() {
         browser.start(queue: DispatchQueue.main) { (completion) in
@@ -147,6 +153,8 @@ class ViewModel: ObservableObject {
         browser.cancel()
         roomModel = [RoomModel]()
     }
+    
+    // MARK: Server
     
     func startServer(name: String) {
         server = NetworkServer(name: name, maxConnectionsAmount: currentRoom?.maxPlayersAmount ?? 0)
@@ -160,6 +168,8 @@ class ViewModel: ObservableObject {
         server?.stop()
         server = nil
     }
+    
+    // MARK: Connection
     
     func startConnection(endPoint: NWEndpoint) {
         connection = NetworkConnection(nwConnection: NWConnection(to: endPoint, using: .tcp))
@@ -183,6 +193,8 @@ class ViewModel: ObservableObject {
             connection?.send(data: data)
         }
     }
+    
+    // MARK: Gameplay networking
     
     func startGame(time: Double) {
         showActivityIndicator = true

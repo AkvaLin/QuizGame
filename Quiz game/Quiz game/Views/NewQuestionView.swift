@@ -32,6 +32,8 @@ struct NewQuestionView: View {
                 .overlay {
                     TextField("Вопрос", text: $question)
                         .padding()
+                        .lineLimit(nil)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
                 .padding()
             HStack {
@@ -40,12 +42,16 @@ struct NewQuestionView: View {
                     .overlay {
                         TextField("Вариант 1", text: $firstAnswer)
                             .padding()
+                            .lineLimit(nil)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
                 RoundedRectangle(cornerRadius: 15)
                     .foregroundColor(.gray.opacity(0.2))
                     .overlay {
                         TextField("Вариант 2", text: $secondAnswer)
                             .padding()
+                            .lineLimit(nil)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
             }
             .padding()
@@ -55,12 +61,16 @@ struct NewQuestionView: View {
                     .overlay {
                         TextField("Вариант 3", text: $thirdAnswer)
                             .padding()
+                            .lineLimit(nil)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
                 RoundedRectangle(cornerRadius: 15)
                     .foregroundColor(.gray.opacity(0.2))
                     .overlay {
                         TextField("Вариант 4", text: $fourthAnswer)
                             .padding()
+                            .lineLimit(nil)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
             }
             .padding()
@@ -138,6 +148,20 @@ struct NewQuestionView: View {
         }
         .alert("Заполните все поля", isPresented: $showAlert) {
             Button("Ок", role: .cancel) { }
+        }
+        .onAppear {
+            switch answer {
+            case firstAnswer:
+                answerNumber = 1
+            case secondAnswer:
+                answerNumber = 2
+            case thirdAnswer:
+                answerNumber = 3
+            case fourthAnswer:
+                answerNumber = 4
+            default:
+                answerNumber = 1
+            }
         }
     }
 }

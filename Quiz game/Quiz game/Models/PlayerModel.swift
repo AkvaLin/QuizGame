@@ -8,6 +8,7 @@
 import Foundation
 
 class PlayerModel: Identifiable, ObservableObject {
+    
     var id = UUID()
     @Published var name: String
     

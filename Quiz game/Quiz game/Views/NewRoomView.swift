@@ -164,7 +164,7 @@ struct NewRoomView: View {
         }
     }
     
-    func delete(at offsets: IndexSet) {
+    private func delete(at offsets: IndexSet) {
         viewModel.deleteQuiz(indexSet: offsets)
     }
 }

@@ -8,6 +8,7 @@
 import Foundation
 
 class QuestionModel: Identifiable, ObservableObject {
+    
     @Published var question: String
     @Published var firstAnswer: String
     @Published var secondAnswer: String
