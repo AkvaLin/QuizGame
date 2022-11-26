@@ -20,6 +20,7 @@ class ViewModel: ObservableObject {
     @Published var showResultsView: Bool = false
     @Published var showLobbyView: Bool = false
     @Published var alertError: Bool = false
+    @Published var showEndGameAlert: Bool = false
     
     private var browser = NetworkBrowser()
     private var server: NetworkServer?

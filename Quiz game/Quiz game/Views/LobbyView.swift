@@ -74,10 +74,18 @@ struct LobbyView: View {
                 viewModel.cancelConnection()
             }
         }
+        .alert("Игра завершена. Покинуть игру", isPresented: $viewModel.showEndGameAlert) {
+            Button("Ok", role: .cancel) {
+                viewModel.showLobbyView = false
+            }
+        }
         .onChange(of: showView) { value in
             if !value {
                 dismiss()
             }
+        }
+        .onDisappear {
+            viewModel.showEndGameAlert = false
         }
     }
 }
