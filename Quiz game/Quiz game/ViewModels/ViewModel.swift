@@ -353,7 +353,6 @@ extension ViewModel: NetworkServerDelegate {
     func connectionOpened(id: Int) {}
     
     func connectionReceivedData(id: Int, data: Data) {
-        print(id)
         guard let messageType = try? JSONDecoder().decode(MessageType.self, from: data) else { return }
         switch messageType.messageType {
         case "hello":
