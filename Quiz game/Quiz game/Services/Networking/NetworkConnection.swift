@@ -42,7 +42,7 @@ class NetworkConnection
 
     func send(data: Data)
     {
-        let sizePrefix = withUnsafeBytes(of: UInt16(data.count).bigEndian) { Data($0) }
+        let sizePrefix = withUnsafeBytes(of: UInt16(data.count).littleEndian) { Data($0) }
                 
         print("Send \(data.count) bytes")
         
@@ -100,7 +100,7 @@ class NetworkConnection
             {
                 sizePrefix = data.withUnsafeBytes
                 {
-                    $0.bindMemory(to: UInt16.self)[0].bigEndian
+                    $0.bindMemory(to: UInt16.self)[0].littleEndian
                 }
             }
             
