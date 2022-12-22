@@ -72,7 +72,7 @@ struct MainView: View {
                 .frame(width: 320, height: 50)
                 .padding()
             }
-            .navigationTitle("Quiz Game")
+            .navigationTitle("Brainstorm")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
@@ -86,7 +86,7 @@ struct MainView: View {
                 NewRoomView(viewModel: viewModel, isNewRoomViewShowing: $isNewRoomViewShowing)
             }
             .alert("Введите имя", isPresented: $showPersonAlert) {
-                TextField("Name", text: $name)
+                TextField("Имя", text: $name)
                 Button("Сохранить") {
                     UserDefaults.standard.set(name, forKey: "playerName")
                 }

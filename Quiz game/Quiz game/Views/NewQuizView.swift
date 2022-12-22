@@ -56,6 +56,7 @@ struct NewQuizView: View {
                 }
                 .onDelete(perform: delete)
             }
+            .listStyle(.inset)
             .toolbar {
                 EditButton()
             }
