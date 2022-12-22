@@ -132,22 +132,6 @@ class NetworkServer: NetworkConnectionDelegate
         }
     }
     
-    func sendTo(id: Int, data: Data)
-    {
-        self.connectionsByID[id]?.send(data: data)
-    }
-    
-    func sendToAllExcept(id: Int, data: Data)
-    {
-        for conn in self.connectionsByID
-        {
-            if (conn.value.id != id)
-            {
-                conn.value.send(data: data)
-            }
-        }
-    }
-    
     func sendToAllPlayersData(completion: @escaping (Data) -> Void ) {
         guard let data = try? JSONEncoder().encode(PlayersMessage(playersAmount: "\(namesByID.count)",
                                                        maxPlayersAmount: "\(maxConnectionsAmount)",
@@ -170,13 +154,6 @@ class NetworkServer: NetworkConnectionDelegate
         
         sendToAll(data: data)
         completion(data)
-    }
-    
-    var port: NWEndpoint.Port?
-    {
-        get {
-            return self.listener.port
-        }
     }
     
     // MARK: NetworkConnectionDelegate

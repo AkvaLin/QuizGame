@@ -90,16 +90,5 @@ struct LobbyView: View {
                 viewModel.showEndGameAlert = false
             }
         }
-        .overlay {
-            if viewModel.showActivityIndicator {
-                ProgressView()
-                    .onAppear {
-                        disableButton = true
-                    }
-                    .onDisappear {
-                        disableButton = false
-                    }
-            }
-        }
     }
 }

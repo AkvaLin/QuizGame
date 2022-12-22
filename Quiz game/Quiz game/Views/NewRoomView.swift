@@ -16,7 +16,7 @@ struct NewRoomView: View {
     @State var showDocumentPicker: Bool = false
     @State var showNewQuizView: Bool = false
     @State var quiz: QuizModel? = nil
-    @State var playersAmount: Int = 2
+    @State var playersAmount: Int = 10
     @State var choosedQuiz: QuizModel?
     
     private let playersAmountArr = Array(2...20)
@@ -25,32 +25,34 @@ struct NewRoomView: View {
         NavigationView {
             VStack {
                 Text("Название комнаты")
-                    .padding()
+                    .padding([.top, .leading, .trailing])
                 
                 TextField("Название", text: $name)
                     .textFieldStyle(.roundedBorder)
                     .padding()
                 
                 HStack {
-                    Text("Максимальное количество игроков")
+                    Text("Количество игроков")
                     
-                    Picker("Количество мест", selection: $playersAmount) {
+                    Picker("Количество игроков", selection: $playersAmount) {
                         ForEach(playersAmountArr, id: \.self) { amount in
                             Text("\(amount)")
                         }
                     }
                 }
+                .padding()
                 
                 if viewModel.quizModel.count > 0 {
                     HStack {
                         Text("Выбрать викторину")
-                            .padding()
+                            
                         Picker("", selection: $choosedQuiz) {
                             ForEach(viewModel.quizModel, id: \.self) { quiz in
                                 Text("\(quiz.name)").tag(quiz as QuizModel?)
                             }
                         }
                     }
+                    .padding([.top, .leading, .trailing])
                     .onAppear {
                         choosedQuiz = viewModel.quizModel.last
                     }
@@ -61,7 +63,9 @@ struct NewRoomView: View {
                     List {
                         ForEach(viewModel.quizModel) { quiz in
                             NavigationLink {
-                                NewQuizView(quizModel: quiz, viewModel: viewModel, showView: $showNewQuizView)
+                                NewQuizView(quizModel: quiz,
+                                            viewModel: viewModel,
+                                            showView: $showNewQuizView)
                             } label: {
                                 HStack {
                                     Text(quiz.name)
@@ -99,7 +103,9 @@ struct NewRoomView: View {
                 if choosedQuiz != nil {
                     Button {
                         viewModel.showLobbyView = true
-                        let model = RoomModel(name: name, maxPlayersAmount: playersAmount, endPoint: nil)
+                        let model = RoomModel(name: name,
+                                              maxPlayersAmount: playersAmount,
+                                              endPoint: nil)
                         viewModel.currentRoom = model
                         viewModel.setQuestions(quizModel: choosedQuiz!)
                         viewModel.startServer(name: name)
@@ -137,9 +143,13 @@ struct NewRoomView: View {
         }
         .sheet(isPresented: $showNewQuizView) {
             if let quiz = self.quiz {
-                NewQuizView(quizModel: quiz, viewModel: viewModel, showView: $showNewQuizView)
+                NewQuizView(quizModel: quiz,
+                            viewModel: viewModel,
+                            showView: $showNewQuizView)
             } else {
-                NewQuizView(quizModel: QuizModel(name: ""), viewModel: viewModel, showView: $showNewQuizView)
+                NewQuizView(quizModel: QuizModel(name: ""),
+                            viewModel: viewModel,
+                            showView: $showNewQuizView)
             }
         }
         .fullScreenCover(isPresented: $viewModel.showLobbyView) {

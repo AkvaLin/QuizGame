@@ -21,7 +21,6 @@ class ViewModel: ObservableObject {
     @Published var showLobbyView: Bool = false
     @Published var alertError: Bool = false
     @Published var showEndGameAlert: Bool = false
-    @Published var showActivityIndicator: Bool = false
     
     private var browser = NetworkBrowser()
     private var server: NetworkServer?
@@ -41,7 +40,11 @@ class ViewModel: ObservableObject {
                 fatalError("Error loading Core Data: \(error.localizedDescription)")
             }
         }
+        if !UserDefaults.standard.hasLaunched {
+            loadQuiz()
+        }
         fetchData()
+        UserDefaults.standard.hasLaunched = true
     }
     
     // MARK: - CoreData
@@ -135,6 +138,14 @@ class ViewModel: ObservableObject {
         }
     }
     
+    // MARK: - UserDefaults
+    
+    func loadQuiz() {
+        QuizModel.defaultQuiz.forEach { model in
+            addData(quizModel: model)
+        }
+    }
+    
     // MARK: - Networking
     
     func setQuestions(quizModel: QuizModel) {
@@ -161,6 +172,7 @@ class ViewModel: ObservableObject {
         server?.delegate = self
         try? server?.start(queue: DispatchQueue(label: "Server Queue"))
         id = UUID()
+        self.currentRoom?.players = [UserDefaults.standard.string(forKey: "playerName") ?? "Host"]
         server?.addNewName(id: id?.hashValue ?? -1, name: UserDefaults.standard.string(forKey: "playerName") ?? "Host")
     }
     
@@ -197,7 +209,7 @@ class ViewModel: ObservableObject {
     // MARK: Gameplay networking
     
     func startGame(time: Double) {
-        showActivityIndicator = true
+        timerAction()
         if timer == nil {
             timer = Timer.scheduledTimer(timeInterval: time,
                                          target: self,
@@ -215,7 +227,6 @@ class ViewModel: ObservableObject {
     }
     
     @objc func timerAction() {
-        showActivityIndicator = false
         guard let model = questions?.questionsModel else { return }
         if model.count - 1 < currentIndex {
             cancelTimer()
